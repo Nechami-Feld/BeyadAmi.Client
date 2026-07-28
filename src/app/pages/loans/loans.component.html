@@ -1,0 +1,197 @@
+<div class="loans-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="Loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת השאלה
+      </button>
+      <button type="button" [class]="showActiveOnly() ? 'secondary-btn active-filter-btn' : 'secondary-btn'" (click)="toggleActiveFilter()">
+        <i class="pi pi-filter"></i>
+        {{ showActiveOnly() ? 'הצג הכל' : 'הצג פעילים בלבד' }}
+      </button>
+    </div>
+    <h2>השאלה</h2>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Search loan" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="loans-table">
+        <thead>
+          <tr>
+            <th>מספר מכשיר</th>
+            <th>Device Type</th>
+            <th>סניף</th>
+            <th>שם משאיל</th>
+            <th>טלפון</th>
+            <th>Deposit Type</th>
+            <th>Deposit Amount</th>
+            <th>תאריך השאלה</th>
+            <th>תאריך החזרה</th>
+            <th>סטטוס</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredLoans().length > 0; else emptyState">
+            <tr *ngFor="let loan of filteredLoans(); trackBy: trackByLoanId">
+              <td>{{ loan.deviceNumber }}</td>
+              <td>{{ loan.deviceTypeName }}</td>
+              <td>{{ loan.branchName }}</td>
+              <td>{{ loan.borrowerFirstName }} {{ loan.borrowerLastName }}</td>
+              <td>{{ loan.phone }}</td>
+              <td>{{ loan.depositTypeName }}</td>
+              <td>{{ loan.depositAmount }}</td>
+              <td>{{ loan.loanDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ loan.returnDate ? (loan.returnDate | date: 'dd/MM/yyyy') : '—' }}</td>
+              <td>
+                <span [class]="loan.isActive ? 'badge badge-success' : 'badge badge-pending'">
+                  {{ loan.isActive ? 'Active' : 'Returned' }}
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="icon-btn secondary"
+                    (click)="openReturnDialog(loan)"
+                    *ngIf="loan.isActive"
+                    title="Return"
+                  >
+                    <i class="pi pi-undo"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteLoan(loan)" title="Delete">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="11" class="empty-state">No loans found.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add Loan Dialog -->
+  <p-dialog
+    header="Add Loan"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [style]="{ width: '42rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="loanForm" (ngSubmit)="saveLoan()" class="loan-form">
+      <div class="field">
+        <label for="deviceId">מכשיר</label>
+        <select id="deviceId" class="field-select" formControlName="deviceId">
+          <option [value]="0" disabled>Select a device</option>
+          <option *ngFor="let device of devices()" [value]="device.deviceId">
+            {{ device.deviceNumber }} — {{ device.deviceTypeName }} ({{ device.branchName }})
+          </option>
+        </select>
+        <small class="error" *ngIf="hasError(loanForm, 'deviceId', 'required') || hasError(loanForm, 'deviceId', 'min')">Device is required.</small>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="borrowerFirstName">שם פרטי</label>
+          <input pInputText id="borrowerFirstName" formControlName="borrowerFirstName" />
+        </div>
+        <div class="field">
+          <label for="borrowerLastName">שם משפחה</label>
+          <input pInputText id="borrowerLastName" formControlName="borrowerLastName" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="address">כתובת</label>
+        <input pInputText id="address" formControlName="address" />
+      </div>
+
+      <div class="field">
+        <label for="phone">טלפון</label>
+        <input pInputText id="phone" formControlName="phone" />
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="depositTypeId">Deposit Type</label>
+          <select id="depositTypeId" class="field-select" formControlName="depositTypeId">
+            <option [value]="0" disabled>Select deposit type</option>
+            <option *ngFor="let dt of depositTypes()" [value]="dt.depositTypeId">{{ dt.depositTypeName }}</option>
+          </select>
+          <small class="error" *ngIf="hasError(loanForm, 'depositTypeId', 'required') || hasError(loanForm, 'depositTypeId', 'min')">Deposit type is required.</small>
+        </div>
+        <div class="field">
+          <label for="depositAmount">Deposit Amount</label>
+          <input pInputText id="depositAmount" type="number" formControlName="depositAmount" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="notes">הערות</label>
+        <textarea pInputTextarea id="notes" rows="3" formControlName="notes"></textarea>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="loanForm.invalid || saving()" (click)="saveLoan()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <!-- Return Loan Dialog -->
+  <p-dialog
+    header="Return Device"
+    [visible]="returnDialogVisible()"
+    (visibleChange)="returnDialogVisible.set($event)"
+    [modal]="true"
+    [style]="{ width: '32rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="returnForm" (ngSubmit)="returnLoan()" class="loan-form">
+      <div class="field">
+        <label for="returnDate">תאריך החזרה</label>
+        <input type="date" id="returnDate" class="field-input" formControlName="returnDate" />
+      </div>
+
+      <div class="field">
+        <label for="returnNotes">הערות</label>
+        <textarea pInputTextarea id="returnNotes" rows="3" formControlName="notes"></textarea>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeReturnDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="saving()" (click)="returnLoan()">
+          <i class="pi pi-check"></i>
+          אשר החזרה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
