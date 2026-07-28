@@ -1,0 +1,93 @@
+<div class="device-categories-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת קטגוריה
+      </button>
+    </div>
+    <h2>קטגוריות</h2>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Search device category" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="device-categories-table">
+        <thead>
+          <tr>
+            <th>שם קטגוריה</th>
+            <th>תיאור</th>
+            <th>Device Types Count</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredCategories().length > 0; else emptyState">
+            <tr *ngFor="let category of filteredCategories(); trackBy: trackByCategoryId">
+              <td>{{ category.categoryName }}</td>
+              <td>{{ category.description }}</td>
+              <td>{{ category.deviceTypesCount }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(category)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteCategory(category)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="4" class="empty-state">No device categories found.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog [header]="isEditMode() ? 'Edit Device Category' : 'Add Device Category'" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [modal]="true" [style]="{ width: '38rem' }" [draggable]="false" [resizable]="false">
+    <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" class="category-form">
+      <div class="field">
+        <label for="categoryName">שם קטגוריה</label>
+        <input pInputText id="categoryName" formControlName="categoryName" />
+        <small class="error" *ngIf="hasError('categoryName', 'required')">Category name is required.</small>
+      </div>
+
+      <div class="field">
+        <label for="description">תיאור</label>
+        <textarea pInputTextarea id="description" rows="3" formControlName="description"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="deviceTypesCount">Device Types Count</label>
+        <p-inputnumber id="deviceTypesCount" formControlName="deviceTypesCount" [min]="0" />
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="categoryForm.invalid" (click)="saveCategory()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
