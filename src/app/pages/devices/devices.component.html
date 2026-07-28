@@ -1,0 +1,155 @@
+<div class="devices-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="Loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת מכשיר
+      </button>
+    </div>
+    <h2>מכשירים</h2>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Search device" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+
+      <div class="filter-branch">
+        <select class="branch-filter-select" [ngModel]="filterBranchId()" (ngModelChange)="filterByBranch($event === '' ? null : +$event)">
+          <option value="">כל הסניפים</option>
+          <option *ngFor="let branch of branches()" [value]="branch.branchId">{{ branch.branchName }}</option>
+        </select>
+      </div>
+
+      <div class="filter-available" *ngIf="filterBranchId() !== null">
+        <label class="available-toggle">
+          <input
+            type="checkbox"
+            [ngModel]="filterAvailableOnly()"
+            (ngModelChange)="onAvailableToggle($event)"
+          />
+          מכשירים פנויים בלבד
+        </label>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="devices-table">
+        <thead>
+          <tr>
+            <th>מספר מכשיר</th>
+            <th>Device Type</th>
+            <th>קטגוריה</th>
+            <th>סניף</th>
+            <th>חברה</th>
+            <th>האם פנוי</th>
+            <th>הערות</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredDevices().length > 0; else emptyState">
+            <tr *ngFor="let device of filteredDevices(); trackBy: trackByDeviceId">
+              <td>{{ device.deviceNumber }}</td>
+              <td>{{ device.deviceTypeName }}</td>
+              <td>{{ device.categoryName }}</td>
+              <td>{{ device.branchName }}</td>
+              <td>{{ device.company }}</td>
+              <td>
+                <span [class]="device.isAvailable ? 'badge badge-success' : 'badge badge-pending'">
+                  {{ device.isAvailable ? 'כן' : 'לא' }}
+                </span>
+              </td>
+              <td>{{ device.notes }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(device)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteDevice(device)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="8" class="empty-state">No devices found.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog
+    [header]="isEditMode() ? 'עריכת מכשיר' : 'הוספת מכשיר '"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [style]="{ width: '38rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="deviceForm" (ngSubmit)="saveDevice()" class="device-form">
+      <div class="field">
+        <label for="deviceNumber">מספר מכשיר</label>
+        <input pInputText id="deviceNumber" formControlName="deviceNumber" />
+      </div>
+
+      <div class="field">
+        <label for="deviceTypeId">Device Type</label>
+        <select id="deviceTypeId" class="field-select" formControlName="deviceTypeId">
+          <option [value]="0" disabled>Select a device type</option>
+          <option *ngFor="let type of deviceTypes()" [value]="type.deviceTypeId">{{ type.deviceTypeName }}</option>
+        </select>
+        <small class="error" *ngIf="hasError('deviceTypeId', 'required') || hasError('deviceTypeId', 'min')">Device type is required.</small>
+      </div>
+
+      <div class="field">
+        <label for="branchId">סניף</label>
+        <select id="branchId" class="field-select" formControlName="branchId">
+          <option [value]="0" disabled>Select a branch</option>
+          <option *ngFor="let branch of branches()" [value]="branch.branchId">{{ branch.branchName }}</option>
+        </select>
+        <small class="error" *ngIf="hasError('branchId', 'required') || hasError('branchId', 'min')">Branch is required.</small>
+      </div>
+
+      <div class="field">
+        <label for="company">חברה</label>
+        <input pInputText id="company" formControlName="company" />
+      </div>
+
+      <div class="field checkbox-field">
+        <label for="isAvailable">
+          <input id="isAvailable" type="checkbox" formControlName="isAvailable" />
+          האם פנוי
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="notes">הערות</label>
+        <textarea pInputTextarea id="notes" rows="3" formControlName="notes"></textarea>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="deviceForm.invalid || saving()" (click)="saveDevice()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
