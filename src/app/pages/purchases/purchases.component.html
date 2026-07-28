@@ -1,0 +1,155 @@
+<div class="purchases-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="Loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת רכישה
+      </button>
+    </div>
+    <h2>רכישות</h2>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="איתור רכישה" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="purchases-table">
+        <thead>
+          <tr>
+            <th>חנות</th>
+            <th>מוצר</th>
+            <th>דגם</th>
+            <th>חברה</th>
+            <th>כמות</th>
+            <th>מחיר ליחידה</th>
+            <th>סה"כ</th>
+            <th>נרכש ע"י</th>
+            <th>תאריך רכישה</th>
+            <th>הערות</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredPurchases().length > 0; else emptyState">
+            <tr *ngFor="let purchase of filteredPurchases(); trackBy: trackByPurchaseId">
+              <td>{{ purchase.storeName }}</td>
+              <td>{{ purchase.productName }}</td>
+              <td>{{ purchase.productModel }}</td>
+              <td>{{ purchase.productCompany }}</td>
+              <td>{{ purchase.quantity }}</td>
+              <td>{{ purchase.pricePerUnit | number:'1.2-2' }}</td>
+              <td>{{ purchase.totalPrice | number:'1.2-2' }}</td>
+              <td>{{ purchase.purchasedBy }}</td>
+              <td>{{ formatDate(purchase.purchaseDate) }}</td>
+              <td>{{ purchase.notes }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(purchase)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deletePurchase(purchase)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="11" class="empty-state">לא נמצאו רכישות.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog
+    [header]="isEditMode() ? 'עריכת רכישה' : 'הוספת רכישה'"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [style]="{ width: '38rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="purchaseForm" (ngSubmit)="savePurchase()" class="purchase-form">
+
+      <div class="field">
+        <label for="storeId">חנות</label>
+        <p-select
+          id="storeId"
+          formControlName="storeId"
+          [options]="stores()"
+          optionLabel="storeName"
+          optionValue="storeId"
+          placeholder="בחר חנות"
+          [style]="{ width: '100%' }"
+        />
+        <small class="error" *ngIf="hasError('storeId', 'required')">חנות היא שדה חובה.</small>
+      </div>
+
+      <div class="field">
+        <label for="productId">מזהה מוצר</label>
+        <input pInputText id="productId" formControlName="productId" type="number" />
+        <small class="error" *ngIf="hasError('productId', 'required')">מוצר הוא שדה חובה.</small>
+        <small class="error" *ngIf="hasError('productId', 'min')">מזהה מוצר חייב להיות גדול מ-0.</small>
+      </div>
+
+      <div class="field">
+        <label for="quantity">כמות</label>
+        <input pInputText id="quantity" formControlName="quantity" type="number" />
+        <small class="error" *ngIf="hasError('quantity', 'required')">כמות היא שדה חובה.</small>
+        <small class="error" *ngIf="hasError('quantity', 'min')">כמות חייבת להיות לפחות 1.</small>
+      </div>
+
+      <div class="field">
+        <label for="pricePerUnit">מחיר ליחידה</label>
+        <input pInputText id="pricePerUnit" formControlName="pricePerUnit" type="number" step="0.01" />
+        <small class="error" *ngIf="hasError('pricePerUnit', 'required')">מחיר ליחידה הוא שדה חובה.</small>
+        <small class="error" *ngIf="hasError('pricePerUnit', 'min')">מחיר חייב להיות 0 או יותר.</small>
+      </div>
+
+      <div class="field">
+        <label for="purchasedBy">נרכש ע"י</label>
+        <input pInputText id="purchasedBy" formControlName="purchasedBy" />
+      </div>
+
+      <div class="field" *ngIf="!isEditMode()">
+        <label for="purchaseDate">תאריך רכישה</label>
+        <input pInputText id="purchaseDate" formControlName="purchaseDate" type="datetime-local" />
+      </div>
+
+      <div class="field">
+        <label for="receipt">קבלה</label>
+        <input pInputText id="receipt" formControlName="receipt" />
+      </div>
+
+      <div class="field">
+        <label for="notes">הערות</label>
+        <textarea pInputTextarea id="notes" rows="3" formControlName="notes"></textarea>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="purchaseForm.invalid || saving()" (click)="savePurchase()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>

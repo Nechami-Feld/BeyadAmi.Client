@@ -19,6 +19,7 @@ export class App {
     { label: 'בקשות סניפים', route: '/branch-requests', icon: 'pi pi-file' },
     { label: 'מכשירים', route: '/devices', icon: 'pi pi-mobile' },
     { label: 'השאלות', route: '/loans', icon: 'pi pi-arrow-right-arrow-left' },
+    { label: 'רכישות', route: '/purchases', icon: 'pi pi-shopping-cart' },
   ];
 
   toggleSidebar(): void {

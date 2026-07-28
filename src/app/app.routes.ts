@@ -5,6 +5,7 @@ import { DeviceCategoriesComponent } from './pages/device-categories/device-cate
 import { BranchRequestsComponent } from './pages/branch-requests/branch-requests.component';
 import { DevicesComponent } from './pages/devices/devices.component';
 import { LoansComponent } from './pages/loans/loans.component';
+import { PurchasesComponent } from './pages/purchases/purchases.component';
 
 export const routes: Routes = [
   { path: 'branches', component: BranchesComponent },
@@ -13,5 +14,6 @@ export const routes: Routes = [
   { path: 'branch-requests', component: BranchRequestsComponent },
   { path: 'devices', component: DevicesComponent },
   { path: 'loans', component: LoansComponent },
+  { path: 'purchases', component: PurchasesComponent },
   { path: '', redirectTo: '/branches', pathMatch: 'full' }
 ];
