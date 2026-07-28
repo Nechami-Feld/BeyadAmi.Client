@@ -140,20 +140,10 @@
   color: #d32f2f;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 2rem 0;
-  color: #64748b;
-}
-
 .dialog-footer-actions {
-  display: flex;
-  justify-content: flex-start;
-  gap: 0.5rem;
   margin-top: 1rem;
   padding-top: 0.75rem;
   border-top: 1px solid #e2e8f0;
   position: relative;
   z-index: 2;
-  flex-direction: row-reverse;
 }

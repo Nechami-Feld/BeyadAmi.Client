@@ -1,0 +1,101 @@
+<div class="stores-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="Loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <h2>חנויות</h2>
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת חנות
+      </button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="איתור חנות" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="stores-table">
+        <thead>
+          <tr>
+            <th>שם חנות</th>
+            <th>כתובת</th>
+            <th>טלפון</th>
+            <th>הערות</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredStores().length > 0; else emptyState">
+            <tr *ngFor="let store of filteredStores(); trackBy: trackByStoreId">
+              <td>{{ store.storeName }}</td>
+              <td>{{ store.address }}</td>
+              <td>{{ store.phone }}</td>
+              <td>{{ store.notes }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(store)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteStore(store)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="5" class="empty-state">No stores found.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog [header]="isEditMode() ? 'עריכת חנות' : 'הוספת חנות'" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [modal]="true" [style]="{ width: '38rem' }" [draggable]="false" [resizable]="false">
+    <form [formGroup]="storeForm" (ngSubmit)="saveStore()" class="store-form">
+      <div class="field">
+        <label for="storeName">שם חנות</label>
+        <input pInputText id="storeName" formControlName="storeName" />
+        <small class="error" *ngIf="hasError('storeName', 'required')">Store name is required.</small>
+      </div>
+
+      <div class="field">
+        <label for="address">כתובת</label>
+        <input pInputText id="address" formControlName="address" />
+        <small class="error" *ngIf="hasError('address', 'required')">Address is required.</small>
+      </div>
+
+      <div class="field">
+        <label for="phone">טלפון</label>
+        <input pInputText id="phone" formControlName="phone" />
+      </div>
+
+      <div class="field">
+        <label for="notes">הערות</label>
+        <input pInputText id="notes" formControlName="notes" />
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="storeForm.invalid || saving()" (click)="saveStore()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>

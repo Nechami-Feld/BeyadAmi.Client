@@ -1,1 +1,121 @@
-@import "primeicons/primeicons.css";/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8fafc;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-direction: row-reverse;
+}
+
+.table-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: right;
+}
+
+.table-wrapper th {
+  background: #f8fafc;
+  font-weight: 700;
+}
+
+.search-box {
+  min-width: 260px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.primary-btn,
+.secondary-btn,
+.icon-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.primary-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.secondary-btn {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.icon-btn {
+  padding: 0.5rem;
+  min-width: 2.25rem;
+  justify-content: center;
+}
+
+.icon-btn.secondary {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.icon-btn.danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.primary-btn:disabled,
+.secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dialog-footer-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-direction: row-reverse;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 0;
+  color: #64748b;
+}
