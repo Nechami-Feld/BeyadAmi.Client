@@ -16,7 +16,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { Loan } from '../../models/loan';
 import { CreateLoan } from '../../models/create-loan';
 import { ReturnLoan } from '../../models/return-loan';
-import { DepositType } from '../../models/deposit-type';
+import { DeviceCategory } from '../../models/device-category';
 import { Device } from '../../models/device';
 import { LoanService } from '../../services/loan.service';
 import { DepositTypeService } from '../../services/deposit-type.service';
@@ -54,7 +54,7 @@ export class LoansComponent implements OnInit {
 
   readonly loans = signal<Loan[]>([]);
   readonly devices = signal<Device[]>([]);
-  readonly depositTypes = signal<DepositType[]>([]);
+  readonly depositTypes = signal<DeviceCategory[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly dialogVisible = signal(false);

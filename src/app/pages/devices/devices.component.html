@@ -112,7 +112,7 @@
         <label for="deviceTypeId">Device Type</label>
         <select id="deviceTypeId" class="field-select" formControlName="deviceTypeId">
           <option [value]="0" disabled>Select a device type</option>
-          <option *ngFor="let type of deviceTypes()" [value]="type.deviceTypeId">{{ type.deviceTypeName }}</option>
+          <option *ngFor="let type of deviceTypes()" [value]="type.categoryId">{{ type.categoryName }}</option>
         </select>
         <small class="error" *ngIf="hasError('deviceTypeId', 'required') || hasError('deviceTypeId', 'min')">Device type is required.</small>
       </div>

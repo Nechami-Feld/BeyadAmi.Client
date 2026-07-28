@@ -15,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { Device } from '../../models/device';
 import { Branch } from '../../models/branch';
-import { DeviceType } from '../../models/device-type';
+import { DeviceCategory } from '../../models/device-category';
 import { CreateDeviceRequest } from '../../models/create-device-request';
 import { UpdateDeviceRequest } from '../../models/update-device-request';
 import { DeviceService } from '../../services/device.service';
@@ -54,7 +54,7 @@ export class DevicesComponent implements OnInit {
 
   readonly devices = signal<Device[]>([]);
   readonly branches = signal<Branch[]>([]);
-  readonly deviceTypes = signal<DeviceType[]>([]);
+  readonly deviceTypes = signal<DeviceCategory[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly dialogVisible = signal(false);

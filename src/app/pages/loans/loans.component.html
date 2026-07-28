@@ -139,7 +139,7 @@
           <label for="depositTypeId">Deposit Type</label>
           <select id="depositTypeId" class="field-select" formControlName="depositTypeId">
             <option [value]="0" disabled>Select deposit type</option>
-            <option *ngFor="let dt of depositTypes()" [value]="dt.depositTypeId">{{ dt.depositTypeName }}</option>
+            <option *ngFor="let dt of depositTypes()" [value]="dt.categoryId">{{ dt.categoryName }}</option>
           </select>
           <small class="error" *ngIf="hasError(loanForm, 'depositTypeId', 'required') || hasError(loanForm, 'depositTypeId', 'min')">Deposit type is required.</small>
         </div>
