@@ -1,0 +1,132 @@
+$sidebar-width: 220px;
+$sidebar-collapsed-width: 60px;
+$sidebar-bg: #1e293b;
+$sidebar-active: #2563eb;
+$sidebar-hover: #334155;
+$transition: 0.25s ease;
+
+.app-shell {
+  display: flex;
+  flex-direction: row-reverse;
+  min-height: 100vh;
+}
+
+// ── Sidebar ──────────────────────────────────────────────
+.sidebar {
+  width: $sidebar-width;
+  background: $sidebar-bg;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width $transition;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.app-shell.sidebar-collapsed .sidebar {
+  width: $sidebar-collapsed-width;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #334155;
+  min-height: 60px;
+}
+
+.logo-text {
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 700;
+  white-space: nowrap;
+  direction: rtl;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &:hover {
+    color: white;
+    background: $sidebar-hover;
+  }
+
+  i {
+    font-size: 0.85rem;
+  }
+}
+
+// ── Nav items ─────────────────────────────────────────────
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background $transition, color $transition;
+  direction: rtl;
+  white-space: nowrap;
+
+  i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    width: 1.25rem;
+    text-align: center;
+  }
+
+  &:hover {
+    background: $sidebar-hover;
+    color: white;
+  }
+
+  &.active {
+    background: $sidebar-active;
+    color: white;
+    font-weight: 600;
+  }
+}
+
+.app-shell.sidebar-collapsed .nav-item {
+  justify-content: center;
+  padding: 0.75rem;
+
+  .nav-label {
+    display: none;
+  }
+}
+
+// ── Main content ──────────────────────────────────────────
+.main-content {
+  flex: 1;
+  margin-right: $sidebar-width;
+  transition: margin-right $transition;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.app-shell.sidebar-collapsed .main-content {
+  margin-right: $sidebar-collapsed-width;
+}

@@ -1,1 +1,31 @@
-<router-outlet />
+<div class="app-shell" [class.sidebar-collapsed]="!sidebarOpen()">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="logo-text" *ngIf="sidebarOpen()">ביד עמי</span>
+      <button class="toggle-btn" (click)="toggleSidebar()" type="button">
+        <i [class]="sidebarOpen() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item"
+        [title]="item.label"
+      >
+        <i [class]="item.icon"></i>
+        <span class="nav-label" *ngIf="sidebarOpen()">{{ item.label }}</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+</div>

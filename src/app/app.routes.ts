@@ -13,5 +13,5 @@ export const routes: Routes = [
   { path: 'branch-requests', component: BranchRequestsComponent },
   { path: 'devices', component: DevicesComponent },
   { path: 'loans', component: LoansComponent },
-  { path: '', redirectTo: '/stores', pathMatch: 'full' }
+  { path: '', redirectTo: '/branches', pathMatch: 'full' }
 ];
