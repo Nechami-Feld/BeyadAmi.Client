@@ -1,0 +1,138 @@
+<div class="branches-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <h2>סניפים</h2>
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת סניף
+      </button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="איתור סניף" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="branches-table">
+        <thead>
+          <tr>
+            <th>שם סניף</th>
+            <th>עיר</th>
+            <th>רחוב</th>
+            <th>דירה</th>
+            <th>שם משפחה</th>
+            <th>טלפון</th>
+            <th>מייל</th>
+            <th>הערות</th>
+            <th>פעיל</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredBranches().length > 0; else emptyState">
+            <tr *ngFor="let branch of filteredBranches(); trackBy: trackByBranchId">
+              <td>{{ branch.branchName }}</td>
+              <td>{{ branch.city }}</td>
+              <td>{{ branch.street }}</td>
+              <td>{{ branch.apartment }}</td>
+              <td>{{ branch.managerLastName }}</td>
+              <td>{{ branch.phone }}</td>
+              <td>{{ branch.email }}</td>
+              <td>{{ branch.notes }}</td>
+              <td>{{ branch.isActive ? 'כן' : 'לא' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(branch)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteBranch(branch)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="11" class="empty-state">No branches found.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog [header]="isEditMode() ? 'עריכת סניף' : 'הוספת סניף'" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [modal]="true" [style]="{ width: '38rem' }" [draggable]="false" [resizable]="false">
+    <form [formGroup]="branchForm" (ngSubmit)="saveBranch()" class="branch-form">
+      <div class="field">
+        <label for="branchName">שם סניף</label>
+        <input pInputText id="branchName" formControlName="branchName" />
+        <small class="error" *ngIf="hasError('branchName', 'required')">Branch name is required.</small>
+      </div>
+
+      <div class="field">
+        <label for="city">עיר</label>
+        <input pInputText id="city" formControlName="city" />
+      </div>
+
+      <div class="field">
+        <label for="street">רחוב</label>
+        <input pInputText id="street" formControlName="street" />
+      </div>
+
+      <div class="field">
+        <label for="apartment">דירה</label>
+        <input pInputText id="apartment" formControlName="apartment" />
+      </div>
+
+      <div class="field">
+        <label for="managerLastName">שם משפחה</label>
+        <input pInputText id="managerLastName" formControlName="managerLastName" />
+      </div>
+
+      <div class="field">
+        <label for="phone">טלפון</label>
+        <input pInputText id="phone" formControlName="phone" />
+      </div>
+
+      <div class="field">
+        <label for="email">מייל</label>
+        <input pInputText id="email" formControlName="email" />
+        <small class="error" *ngIf="hasError('email', 'email')">Please enter a valid email.</small>
+      </div>
+
+      <div class="field">
+        <label for="notes">הערות</label>
+        <textarea pInputTextarea id="notes" rows="3" formControlName="notes"></textarea>
+      </div>
+
+      <div class="field checkbox-field">
+        <label for="isactive">
+          <input id="isActive" type="checkbox" formControlName="isActive" />
+          האם סניף פעיל
+        </label>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="branchForm.invalid" (click)="saveBranch()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
