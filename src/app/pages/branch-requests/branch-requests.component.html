@@ -1,0 +1,132 @@
+<div class="branch-requests-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="Loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת בקשה
+      </button>
+    </div>
+    <h2>בקשות מסניפים</h2>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Search branch request" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+
+      <div class="filter-branch">
+        <select class="branch-filter-select" [ngModel]="filterBranchId()" (ngModelChange)="filterByBranch($event === '' ? null : +$event)">
+          <option value="">כל הסניפים</option>
+          <option *ngFor="let branch of branches()" [value]="branch.branchId">{{ branch.branchName }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="branch-requests-table">
+        <thead>
+          <tr>
+            <th>שם סניף</th>
+            <th>תאריך קליטת בקשה</th>
+            <th>האם בוצע</th>
+            <th>תאריך ביצוע</th>
+            <th>הערות</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredRequests().length > 0; else emptyState">
+            <tr *ngFor="let request of filteredRequests(); trackBy: trackByRequestId">
+              <td>{{ request.branchName }}</td>
+              <td>{{ request.requestDate | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                <span [class]="request.isCompleted ? 'badge badge-success' : 'badge badge-pending'">
+                  {{ request.isCompleted ? 'Yes' : 'No' }}
+                </span>
+              </td>
+              <td>{{ request.completedDate ? (request.completedDate | date: 'dd/MM/yyyy') : '—' }}</td>
+              <td>{{ request.notes }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(request)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteRequest(request)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="6" class="empty-state">No branch requests found.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog
+    [header]="isEditMode() ? 'עריכת בקשה' : 'הוספת בקשה'"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [style]="{ width: '38rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="requestForm" (ngSubmit)="saveRequest()" class="request-form">
+      <div class="field">
+        <label for="branchId">סניף</label>
+        <select id="branchId" class="field-select" formControlName="branchId">
+          <option [value]="0" disabled>Select a branch</option>
+          <option *ngFor="let branch of branches()" [value]="branch.branchId">{{ branch.branchName }}</option>
+        </select>
+        <small class="error" *ngIf="hasError('branchId', 'required') || hasError('branchId', 'min')">Branch is required.</small>
+      </div>
+
+      <div class="field">
+        <label for="requestDate">תאריך</label>
+        <input type="date" id="requestDate" class="field-input" formControlName="requestDate" />
+        <small class="error" *ngIf="hasError('requestDate', 'required')">Request date is required.</small>
+      </div>
+
+      <div class="field checkbox-field">
+        <label for="isCompleted">
+          <input id="isCompleted" type="checkbox" formControlName="isCompleted" />
+          האם בוצע
+        </label>
+      </div>
+
+      <div class="field" *ngIf="requestForm.get('isCompleted')?.value">
+        <label for="completedDate">תאריך ביצוע</label>
+        <input type="date" id="completedDate" class="field-input" formControlName="completedDate" />
+      </div>
+
+      <div class="field">
+        <label for="notes">הערות</label>
+        <textarea pInputTextarea id="notes" rows="3" formControlName="notes"></textarea>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="requestForm.invalid || saving()" (click)="saveRequest()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
