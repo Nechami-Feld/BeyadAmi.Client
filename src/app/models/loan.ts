@@ -2,7 +2,7 @@ export interface Loan {
   loanId?: number;
   deviceId: number;
   deviceNumber?: string | null;
-  deviceTypeName?: string | null;
+  categoryName?: string | null;
   branchName?: string | null;
   borrowerFirstName?: string | null;
   borrowerLastName?: string | null;

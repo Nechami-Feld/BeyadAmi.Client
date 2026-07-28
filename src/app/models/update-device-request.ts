@@ -1,6 +1,6 @@
 export interface UpdateDeviceRequest {
   deviceNumber?: string | null;
-  deviceTypeId: number;
+  categoryId: number;
   branchId: number;
   company?: string | null;
   isAvailable: boolean;

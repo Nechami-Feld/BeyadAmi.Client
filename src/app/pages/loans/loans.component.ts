@@ -74,7 +74,7 @@ export class LoansComponent implements OnInit {
     return source.filter((loan) => {
       const values = [
         loan.deviceNumber,
-        loan.deviceTypeName,
+        loan.categoryName,
         loan.branchName,
         loan.borrowerFirstName,
         loan.borrowerLastName,

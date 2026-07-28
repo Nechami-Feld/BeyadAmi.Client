@@ -1,8 +1,7 @@
 export interface Device {
   deviceId?: number;
   deviceNumber?: string | null;
-  deviceTypeId: number;
-  deviceTypeName?: string | null;
+  categoryId: number;
   categoryName?: string | null;
   branchId: number;
   branchName?: string | null;

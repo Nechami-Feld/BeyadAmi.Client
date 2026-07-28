@@ -49,7 +49,7 @@
           <ng-container *ngIf="filteredLoans().length > 0; else emptyState">
             <tr *ngFor="let loan of filteredLoans(); trackBy: trackByLoanId">
               <td>{{ loan.deviceNumber }}</td>
-              <td>{{ loan.deviceTypeName }}</td>
+              <td>{{ loan.categoryName }}</td>
               <td>{{ loan.branchName }}</td>
               <td>{{ loan.borrowerFirstName }} {{ loan.borrowerLastName }}</td>
               <td>{{ loan.phone }}</td>
@@ -107,7 +107,7 @@
         <select id="deviceId" class="field-select" formControlName="deviceId">
           <option [value]="0" disabled>Select a device</option>
           <option *ngFor="let device of devices()" [value]="device.deviceId">
-            {{ device.deviceNumber }} — {{ device.deviceTypeName }} ({{ device.branchName }})
+            {{ device.deviceNumber }} — {{ device.categoryName }} ({{ device.branchName }})
           </option>
         </select>
         <small class="error" *ngIf="hasError(loanForm, 'deviceId', 'required') || hasError(loanForm, 'deviceId', 'min')">Device is required.</small>

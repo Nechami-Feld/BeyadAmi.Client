@@ -47,7 +47,6 @@
         <thead>
           <tr>
             <th>מספר מכשיר</th>
-            <th>Device Type</th>
             <th>קטגוריה</th>
             <th>סניף</th>
             <th>חברה</th>
@@ -60,7 +59,6 @@
           <ng-container *ngIf="filteredDevices().length > 0; else emptyState">
             <tr *ngFor="let device of filteredDevices(); trackBy: trackByDeviceId">
               <td>{{ device.deviceNumber }}</td>
-              <td>{{ device.deviceTypeName }}</td>
               <td>{{ device.categoryName }}</td>
               <td>{{ device.branchName }}</td>
               <td>{{ device.company }}</td>
@@ -109,12 +107,12 @@
       </div>
 
       <div class="field">
-        <label for="deviceTypeId">Device Type</label>
-        <select id="deviceTypeId" class="field-select" formControlName="deviceTypeId">
-          <option [value]="0" disabled>Select a device type</option>
+        <label for="categoryId">קטגוריה</label>
+        <select id="categoryId" class="field-select" formControlName="categoryId">
+          <option [value]="0" disabled>Select a category</option>
           <option *ngFor="let type of deviceTypes()" [value]="type.categoryId">{{ type.categoryName }}</option>
         </select>
-        <small class="error" *ngIf="hasError('deviceTypeId', 'required') || hasError('deviceTypeId', 'min')">Device type is required.</small>
+        <small class="error" *ngIf="hasError('categoryId', 'required') || hasError('categoryId', 'min')">Category is required.</small>
       </div>
 
       <div class="field">

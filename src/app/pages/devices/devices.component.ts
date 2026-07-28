@@ -75,7 +75,6 @@ export class DevicesComponent implements OnInit {
     return source.filter((device) => {
       const values = [
         device.deviceNumber,
-        device.deviceTypeName,
         device.categoryName,
         device.branchName,
         device.company,
@@ -89,7 +88,7 @@ export class DevicesComponent implements OnInit {
 
   readonly deviceForm: FormGroup = this.fb.nonNullable.group({
     deviceNumber: [''],
-    deviceTypeId: [0, [Validators.required, Validators.min(1)]],
+    categoryId: [0, [Validators.required, Validators.min(1)]],
     branchId: [0, [Validators.required, Validators.min(1)]],
     company: [''],
     isAvailable: [true],
@@ -166,7 +165,7 @@ export class DevicesComponent implements OnInit {
     const formValue = this.deviceForm.getRawValue();
     const request: CreateDeviceRequest | UpdateDeviceRequest = {
       deviceNumber: formValue.deviceNumber || null,
-      deviceTypeId: Number(formValue.deviceTypeId),
+      categoryId: Number(formValue.categoryId),
       branchId: Number(formValue.branchId),
       company: formValue.company || null,
       isAvailable: !!formValue.isAvailable,
@@ -261,7 +260,7 @@ export class DevicesComponent implements OnInit {
   private resetForm(): void {
     this.deviceForm.reset({
       deviceNumber: '',
-      deviceTypeId: 0,
+      categoryId: 0,
       branchId: 0,
       company: '',
       isAvailable: true,
