@@ -1,0 +1,47 @@
+<div class="login-page">
+  <p-toast />
+
+  <div class="login-shell">
+    <p-card class="login-card">
+      <ng-template pTemplate="header">
+        <div class="login-header">
+          <div class="logo-circle">ב</div>
+          <h1>ביד עמי</h1>
+        </div>
+      </ng-template>
+
+      <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-form">
+        <div class="field">
+          <label for="userName">שם משתמש</label>
+          <input id="userName" pInputText formControlName="userName" autocomplete="username" />
+          <small class="error" *ngIf="isUserNameInvalid()">שדה זה הוא חובה</small>
+        </div>
+
+        <div class="field">
+          <label for="password">סיסמה</label>
+          <p-password
+            id="password"
+            formControlName="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            inputStyleClass="w-full"
+            styleClass="w-full"
+            autocomplete="current-password"
+            [inputStyle]="{ width: '100%' }"
+          />
+          <small class="error" *ngIf="isPasswordInvalid()">שדה זה הוא חובה</small>
+        </div>
+
+        <button
+          pButton
+          type="submit"
+          class="login-button"
+          [disabled]="loading() || loginForm.invalid"
+        >
+          <span *ngIf="!loading()">התחברות</span>
+          <span *ngIf="loading()">מתחבר...</span>
+        </button>
+      </form>
+    </p-card>
+  </div>
+</div>

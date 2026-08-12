@@ -39,6 +39,22 @@ $transition: 0.25s ease;
   min-height: 60px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.user-badge {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+}
+
 .logo-text {
   color: white;
   font-size: 1.15rem;
@@ -129,4 +145,31 @@ $transition: 0.25s ease;
 
 .app-shell.sidebar-collapsed .main-content {
   margin-right: $sidebar-collapsed-width;
+}
+
+.app-shell.logged-out .main-content {
+  margin-right: 0;
+}
+
+.sidebar-footer {
+  padding: 0.75rem 0.75rem 1rem;
+  border-top: 1px solid #334155;
+}
+
+.logout-btn {
+  width: 100%;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f8fafc;
+  border-radius: 8px;
+  padding: 0.7rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
 }

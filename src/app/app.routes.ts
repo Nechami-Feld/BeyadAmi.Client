@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { LoginComponent } from './pages/login/login.component';
 import { BranchesComponent } from './pages/branches/branches.component';
 import { StoresComponent } from './pages/stores/stores.component';
 import { DeviceCategoriesComponent } from './pages/device-categories/device-categories.component';
@@ -8,12 +10,13 @@ import { LoansComponent } from './pages/loans/loans.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
 
 export const routes: Routes = [
-  { path: 'branches', component: BranchesComponent },
-  { path: 'stores', component: StoresComponent },
-  { path: 'device-categories', component: DeviceCategoriesComponent },
-  { path: 'branch-requests', component: BranchRequestsComponent },
-  { path: 'devices', component: DevicesComponent },
-  { path: 'loans', component: LoansComponent },
-  { path: 'purchases', component: PurchasesComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'branches', component: BranchesComponent, canActivate: [authGuard] },
+  { path: 'stores', component: StoresComponent, canActivate: [authGuard] },
+  { path: 'device-categories', component: DeviceCategoriesComponent, canActivate: [authGuard] },
+  { path: 'branch-requests', component: BranchRequestsComponent, canActivate: [authGuard] },
+  { path: 'devices', component: DevicesComponent, canActivate: [authGuard] },
+  { path: 'loans', component: LoansComponent, canActivate: [authGuard] },
+  { path: 'purchases', component: PurchasesComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/branches', pathMatch: 'full' }
 ];

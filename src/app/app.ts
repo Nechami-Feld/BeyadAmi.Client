@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +10,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.scss'
 })
 export class App {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   protected readonly title = signal('BeyadAmi');
   readonly sidebarOpen = signal(true);
+  readonly isAuthenticated = this.authService.isAuthenticated;
+  readonly currentUserName = computed(() => this.authService.currentUser()?.userName ?? '');
 
   readonly menuItems = [
     { label: 'סניפים', route: '/branches', icon: 'pi pi-building' },
@@ -22,7 +28,19 @@ export class App {
     { label: 'רכישות', route: '/purchases', icon: 'pi pi-shopping-cart' },
   ];
 
+  ngOnInit(): void {
+    this.authService.initialize();
+  }
+
   toggleSidebar(): void {
     this.sidebarOpen.set(!this.sidebarOpen());
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
+
+  isLoginRoute(): boolean {
+    return this.router.url === '/login';
   }
 }
