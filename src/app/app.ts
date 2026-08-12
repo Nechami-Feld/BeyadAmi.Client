@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { UserRole } from './models/user-role';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -17,16 +18,29 @@ export class App {
   readonly sidebarOpen = signal(true);
   readonly isAuthenticated = this.authService.isAuthenticated;
   readonly currentUserName = computed(() => this.authService.currentUser()?.userName ?? '');
+  readonly currentUserRole = computed(() => this.authService.currentUser()?.role ?? UserRole.User);
+  readonly isAdmin = computed(() => this.currentUserRole() === UserRole.Admin);
 
-  readonly menuItems = [
-    { label: 'סניפים', route: '/branches', icon: 'pi pi-building' },
-    { label: 'חנויות', route: '/stores', icon: 'pi pi-shop' },
-    { label: 'קטגוריות מכשירים', route: '/device-categories', icon: 'pi pi-tags' },
-    { label: 'בקשות סניפים', route: '/branch-requests', icon: 'pi pi-file' },
-    { label: 'מכשירים', route: '/devices', icon: 'pi pi-mobile' },
-    { label: 'השאלות', route: '/loans', icon: 'pi pi-arrow-right-arrow-left' },
-    { label: 'רכישות', route: '/purchases', icon: 'pi pi-shopping-cart' },
-  ];
+  readonly menuItems = computed(() => {
+    const items = [
+      { label: 'סניפים', route: '/branches', icon: 'pi pi-building' },
+      { label: 'חנויות', route: '/stores', icon: 'pi pi-shop' },
+      { label: 'קטגוריות מכשירים', route: '/device-categories', icon: 'pi pi-tags' },
+      { label: 'בקשות סניפים', route: '/branch-requests', icon: 'pi pi-file' },
+      { label: 'מכשירים', route: '/devices', icon: 'pi pi-mobile' },
+      { label: 'השאלות', route: '/loans', icon: 'pi pi-arrow-right-arrow-left' },
+      { label: 'רכישות', route: '/purchases', icon: 'pi pi-shopping-cart' },
+    ];
+
+    if (this.isAdmin()) {
+      return [
+        ...items,
+        { label: 'ניהול משתמשים', route: '/admin/users', icon: 'pi pi-users' }
+      ];
+    }
+
+    return items;
+  });
 
   ngOnInit(): void {
     this.authService.initialize();

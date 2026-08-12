@@ -7,10 +7,12 @@ import { LoginRequest } from '../models/login-request';
 import { LoginResponse } from '../models/login-response';
 import { RegisterRequest } from '../models/register-request';
 import { RegisterResponse } from '../models/register-response';
+import { UserRole } from '../models/user-role';
 
 interface AuthUser {
   userId: number;
   userName: string;
+  role: UserRole;
 }
 
 interface StoredAuthSession {
@@ -18,6 +20,7 @@ interface StoredAuthSession {
   expiresAt: string;
   userId: number;
   userName: string;
+  role: UserRole;
 }
 
 @Injectable({
@@ -35,6 +38,20 @@ export class AuthService {
   readonly expiresAt = signal<string | null>(null);
   readonly redirectUrl = signal<string | null>(null);
 
+  readonly isAdmin = signal(false);
+
+  getCurrentUser(): AuthUser | null {
+    return this.currentUser();
+  }
+
+  getRole(): UserRole | null {
+    return this.currentUser()?.role ?? null;
+  }
+
+  isAdminUser(): boolean {
+    return this.currentUser()?.role === UserRole.Admin;
+  }
+
   initialize(): void {
     const storedSession = this.readStoredSession();
 
@@ -50,7 +67,8 @@ export class AuthService {
 
     this.setSession(storedSession.accessToken, storedSession.expiresAt, {
       userId: storedSession.userId,
-      userName: storedSession.userName
+      userName: storedSession.userName,
+      role: this.normalizeRole(storedSession.role)
     });
   }
 
@@ -59,7 +77,8 @@ export class AuthService {
       tap((response) => {
         this.setSession(response.accessToken, response.expiresAt, {
           userId: response.userId,
-          userName: response.userName
+          userName: response.userName,
+          role: this.normalizeRole(response.role)
         });
       })
     );
@@ -98,6 +117,7 @@ export class AuthService {
     this.expiresAt.set(null);
     this.currentUser.set(null);
     this.isAuthenticated.set(false);
+    this.isAdmin.set(false);
   }
 
   private setSession(accessToken: string, expiresAt: string, user: AuthUser): void {
@@ -105,7 +125,8 @@ export class AuthService {
       accessToken,
       expiresAt,
       userId: user.userId,
-      userName: user.userName
+      userName: user.userName,
+      role: user.role
     };
 
     localStorage.setItem(this.storageKey, JSON.stringify(session));
@@ -113,6 +134,7 @@ export class AuthService {
     this.expiresAt.set(expiresAt);
     this.currentUser.set(user);
     this.isAuthenticated.set(true);
+    this.isAdmin.set(user.role === UserRole.Admin);
   }
 
   private readStoredSession(): StoredAuthSession | null {
@@ -132,7 +154,9 @@ export class AuthService {
         !parsed.expiresAt ||
         typeof parsed.userId !== 'number' ||
         typeof parsed.userName !== 'string' ||
-        !parsed.userName
+        !parsed.userName ||
+        typeof parsed.role !== 'string' ||
+        !parsed.role
       ) {
         return null;
       }
@@ -141,10 +165,15 @@ export class AuthService {
         accessToken: parsed.accessToken,
         expiresAt: parsed.expiresAt,
         userId: parsed.userId,
-        userName: parsed.userName
+        userName: parsed.userName,
+        role: this.normalizeRole(parsed.role)
       };
     } catch {
       return null;
     }
+  }
+
+  private normalizeRole(role?: string | null): UserRole {
+    return role === UserRole.Admin ? UserRole.Admin : UserRole.User;
   }
 }
