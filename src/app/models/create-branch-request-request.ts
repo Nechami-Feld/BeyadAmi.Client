@@ -1,6 +1,6 @@
 export interface CreateBranchRequestRequest {
   branchId: number;
-  requestDate: string;
+  request: string;
   isCompleted: boolean;
   completedDate?: string | null;
   notes?: string | null;

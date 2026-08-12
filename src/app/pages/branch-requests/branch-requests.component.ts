@@ -70,6 +70,7 @@ export class BranchRequestsComponent implements OnInit {
     return source.filter((req) => {
       const values = [
         req.branchName,
+        req.request,
         req.requestDate,
         req.completedDate,
         req.notes,
@@ -82,7 +83,7 @@ export class BranchRequestsComponent implements OnInit {
 
   readonly requestForm: FormGroup = this.fb.nonNullable.group({
     branchId: [0, [Validators.required, Validators.min(1)]],
-    requestDate: ['', [Validators.required]],
+    request: ['', [Validators.required]],
     isCompleted: [false],
     completedDate: [''],
     notes: [''],
@@ -149,7 +150,7 @@ export class BranchRequestsComponent implements OnInit {
     const isCompleted: boolean = !!formValue.isCompleted;
     const request: CreateBranchRequestRequest | UpdateBranchRequestRequest = {
       branchId: Number(formValue.branchId),
-      requestDate: formValue.requestDate,
+      request: formValue.request,
       isCompleted,
       completedDate: isCompleted ? (formValue.completedDate || null) : null,
       notes: formValue.notes || null,
@@ -233,6 +234,7 @@ export class BranchRequestsComponent implements OnInit {
   private resetForm(): void {
     this.requestForm.reset({
       branchId: 0,
+      request: '',
       requestDate: '',
       isCompleted: false,
       completedDate: '',

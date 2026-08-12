@@ -20,7 +20,7 @@
     <div class="table-toolbar">
       <span class="p-input-icon-left search-box">
         <i class="pi pi-search"></i>
-        <input pInputText type="text" placeholder="Search branch request" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        <input pInputText type="text" placeholder="איתור בקשה" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
       </span>
 
       <div class="filter-branch">
@@ -37,6 +37,7 @@
           <tr>
             <th>שם סניף (משפחה)</th>
             <th>תאריך קליטת בקשה</th>
+            <th>בקשה</th>
             <th>האם בוצע</th>
             <th>תאריך ביצוע</th>
             <th>הערות</th>
@@ -48,6 +49,7 @@
             <tr *ngFor="let request of filteredRequests(); trackBy: trackByRequestId">
               <td>{{ request.branchName }}</td>
               <td>{{ request.requestDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ request.request }}</td>
               <td>
                 <span [class]="request.isCompleted ? 'badge badge-success' : 'badge badge-pending'">
                   {{ request.isCompleted ? 'Yes' : 'No' }}
@@ -98,10 +100,11 @@
       </div>
 
       <div class="field">
-        <label for="requestDate">תאריך</label>
-        <input type="date" id="requestDate" class="field-input" formControlName="requestDate" />
-        <small class="error" *ngIf="hasError('requestDate', 'required')">Request date is required.</small>
+        <label for="request">בקשה</label>
+        <textarea pInputTextarea id="request" rows="3" formControlName="request"></textarea>
+        <small class="error" *ngIf="hasError('request', 'required')">Request is required.</small>
       </div>
+
 
       <div class="field checkbox-field">
         <label for="isCompleted">
