@@ -30,7 +30,6 @@
           <tr>
             <th>שם קטגוריה</th>
             <th>תיאור</th>
-            <th>Device Types Count</th>
             <th>פעולות</th>
           </tr>
         </thead>
@@ -39,7 +38,6 @@
             <tr *ngFor="let category of filteredCategories(); trackBy: trackByCategoryId">
               <td>{{ category.categoryName }}</td>
               <td>{{ category.description }}</td>
-              <td>{{ category.deviceTypesCount }}</td>
               <td>
                 <div class="action-buttons">
                   <button type="button" class="icon-btn secondary" (click)="openEditDialog(category)">
@@ -74,11 +72,6 @@
       <div class="field">
         <label for="description">תיאור</label>
         <textarea pInputTextarea id="description" rows="3" formControlName="description"></textarea>
-      </div>
-
-      <div class="field">
-        <label for="deviceTypesCount">Device Types Count</label>
-        <p-inputnumber id="deviceTypesCount" formControlName="deviceTypesCount" [min]="0" />
       </div>
 
       <div class="dialog-footer-actions">
