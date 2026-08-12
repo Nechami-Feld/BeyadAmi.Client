@@ -1,0 +1,75 @@
+<div class="login-page">
+  <p-toast />
+
+  <div class="login-shell">
+    <p-card class="login-card">
+      <ng-template pTemplate="header">
+        <div class="login-header">
+          <div class="logo-circle">ב</div>
+          <h1>ביד עמי</h1>
+        </div>
+      </ng-template>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submit()" class="login-form">
+        <div class="field">
+          <label for="userName">שם משתמש</label>
+          <input id="userName" pInputText formControlName="userName" autocomplete="username" />
+          <small class="error" *ngIf="isUserNameInvalid()">יש להזין שם משתמש</small>
+        </div>
+
+        <div class="field">
+          <label for="email">אימייל</label>
+          <input id="email" pInputText type="email" formControlName="email" autocomplete="email" />
+          <small class="error" *ngIf="hasError('email', 'required')">יש להזין כתובת אימייל</small>
+          <small class="error" *ngIf="hasError('email', 'email') && !hasError('email', 'required')">יש להזין כתובת אימייל תקינה</small>
+        </div>
+
+        <div class="field">
+          <label for="password">סיסמה</label>
+          <p-password
+            id="password"
+            formControlName="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            inputStyleClass="w-full"
+            styleClass="w-full"
+            autocomplete="new-password"
+            [inputStyle]="{ width: '100%' }"
+          />
+          <small class="error" *ngIf="hasError('password', 'required')">יש להזין סיסמה</small>
+          <small class="error" *ngIf="hasError('password', 'minlength') && !hasError('password', 'required')">הסיסמה חייבת להכיל לפחות 6 תווים</small>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">אימות סיסמה</label>
+          <p-password
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            [feedback]="false"
+            [toggleMask]="true"
+            inputStyleClass="w-full"
+            styleClass="w-full"
+            autocomplete="new-password"
+            [inputStyle]="{ width: '100%' }"
+          />
+          <small class="error" *ngIf="hasError('confirmPassword', 'required')">יש להזין קוד אימות</small>
+          <small class="error" *ngIf="hasPasswordMismatch()">הסיסמאות אינן זהות</small>
+        </div>
+
+        <button
+          pButton
+          type="submit"
+          class="login-button"
+          [disabled]="loading() || registerForm.invalid"
+        >
+          <span *ngIf="!loading()">הרשמה</span>
+          <span *ngIf="loading()">מוסיף משתמש...</span>
+        </button>
+
+        <div class="auth-link-row">
+          <a routerLink="/login" class="auth-link">כבר יש לך חשבון? להתחברות</a>
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>

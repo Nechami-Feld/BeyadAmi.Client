@@ -5,6 +5,8 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoginRequest } from '../models/login-request';
 import { LoginResponse } from '../models/login-response';
+import { RegisterRequest } from '../models/register-request';
+import { RegisterResponse } from '../models/register-response';
 
 interface AuthUser {
   userId: number;
@@ -61,6 +63,10 @@ export class AuthService {
         });
       })
     );
+  }
+
+  register(request: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.baseUrl}api/auth/register`, request);
   }
 
   logout(): void {
