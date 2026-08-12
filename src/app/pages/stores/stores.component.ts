@@ -76,6 +76,7 @@ export class StoresComponent implements OnInit {
     storeName: ['', [Validators.required]],
     address: ['', [Validators.required]],
     phone: [''],
+    email: [''],
     notes: [''],
     productsCount: [0, [Validators.required, Validators.min(0)]]
   });
@@ -132,6 +133,7 @@ export class StoresComponent implements OnInit {
       storeName: formValue.storeName,
       address: formValue.address,
       phone: formValue.phone ?? '',
+      email: formValue.email ?? null,
       notes: formValue.notes ?? '',
       productsCount: Number(formValue.productsCount ?? 0)
     };
@@ -206,6 +208,7 @@ export class StoresComponent implements OnInit {
       storeName: '',
       address: '',
       phone: '',
+      email: '',
       notes: '',
       productsCount: 0
     });

@@ -31,6 +31,7 @@
             <th>שם חנות</th>
             <th>כתובת</th>
             <th>טלפון</th>
+            <th>כתובת מייל</th>
             <th>הערות</th>
             <th>פעולות</th>
           </tr>
@@ -41,6 +42,7 @@
               <td>{{ store.storeName }}</td>
               <td>{{ store.address }}</td>
               <td>{{ store.phone }}</td>
+              <td>{{ store.email || '-' }}</td>
               <td>{{ store.notes }}</td>
               <td>
                 <div class="action-buttons">
@@ -84,7 +86,12 @@
         <input pInputText id="phone" formControlName="phone" />
       </div>
 
-      <div class="field">
+      <div class="field">        
+        <label for="email">כתובת מייל</label>
+        <input pInputText id="email" formControlName="email" />
+      </div>
+
+      <div class="field">        
         <label for="notes">הערות</label>
         <input pInputText id="notes" formControlName="notes" />
       </div>
