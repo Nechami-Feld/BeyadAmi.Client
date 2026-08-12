@@ -28,11 +28,10 @@
       <table class="branches-table">
         <thead>
           <tr>
-            <th>שם סניף</th>
+            <th>שם סניף (משפחה)</th>
             <th>עיר</th>
             <th>רחוב</th>
             <th>דירה</th>
-            <th>שם משפחה</th>
             <th>טלפון</th>
             <th>מייל</th>
             <th>הערות</th>
@@ -47,7 +46,6 @@
               <td>{{ branch.city }}</td>
               <td>{{ branch.street }}</td>
               <td>{{ branch.apartment }}</td>
-              <td>{{ branch.managerLastName }}</td>
               <td>{{ branch.phone }}</td>
               <td>{{ branch.email }}</td>
               <td>{{ branch.notes }}</td>
@@ -78,7 +76,7 @@
   <p-dialog [header]="isEditMode() ? 'עריכת סניף' : 'הוספת סניף'" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [modal]="true" [style]="{ width: '38rem' }" [draggable]="false" [resizable]="false">
     <form [formGroup]="branchForm" (ngSubmit)="saveBranch()" class="branch-form">
       <div class="field">
-        <label for="branchName">שם סניף</label>
+        <label for="branchName">שם סניף (משפחה)</label>
         <input pInputText id="branchName" formControlName="branchName" />
         <small class="error" *ngIf="hasError('branchName', 'required')">Branch name is required.</small>
       </div>
@@ -98,10 +96,6 @@
         <input pInputText id="apartment" formControlName="apartment" />
       </div>
 
-      <div class="field">
-        <label for="managerLastName">שם משפחה</label>
-        <input pInputText id="managerLastName" formControlName="managerLastName" />
-      </div>
 
       <div class="field">
         <label for="phone">טלפון</label>
