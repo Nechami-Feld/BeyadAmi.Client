@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Loan } from '../models/loan';
 import { CreateLoan } from '../models/create-loan';
 import { ReturnLoan } from '../models/return-loan';
+import { UpdateLoan } from '../models/update-loan';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,10 @@ export class LoanService {
 
   createLoan(model: CreateLoan): Observable<Loan> {
     return this.http.post<Loan>(`${this.baseUrl}api/loans`, model);
+  }
+
+  updateLoan(id: number, model: UpdateLoan): Observable<Loan> {
+    return this.http.put<Loan>(`${this.baseUrl}api/loans/${id}`, model);
   }
 
   returnLoan(id: number, model: ReturnLoan): Observable<Loan> {

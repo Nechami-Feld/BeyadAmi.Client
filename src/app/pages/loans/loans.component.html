@@ -62,6 +62,9 @@
               </td>
               <td>
                 <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(loan)" title="עריכה">
+                    <i class="pi pi-pencil"></i>
+                  </button>
                   <button
                     type="button"
                     class="icon-btn secondary"
@@ -89,9 +92,9 @@
     </div>
   </div>
 
-  <!-- Add Loan Dialog -->
+  <!-- Add/Edit Loan Dialog -->
   <p-dialog
-    header="Add Loan"
+    [header]="isEditMode() ? 'עריכת השאלה' : 'Add Loan'"
     [visible]="dialogVisible()"
     (visibleChange)="dialogVisible.set($event)"
     [modal]="true"

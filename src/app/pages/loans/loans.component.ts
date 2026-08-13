@@ -15,6 +15,7 @@ import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { Loan } from '../../models/loan';
 import { CreateLoan } from '../../models/create-loan';
+import { UpdateLoan } from '../../models/update-loan';
 import { ReturnLoan } from '../../models/return-loan';
 import { DeviceCategory } from '../../models/device-category';
 import { Device } from '../../models/device';
@@ -60,6 +61,7 @@ export class LoansComponent implements OnInit {
   readonly saving = signal(false);
   readonly dialogVisible = signal(false);
   readonly returnDialogVisible = signal(false);
+  readonly isEditMode = signal(false);
   readonly showActiveOnly = signal(false);
   readonly searchTerm = signal('');
   readonly selectedLoanId = signal<number | null>(null);
@@ -129,7 +131,23 @@ export class LoansComponent implements OnInit {
   }
 
   openCreateDialog(): void {
+    this.isEditMode.set(false);
+    this.selectedLoanId.set(null);
     this.resetLoanForm();
+    this.dialogVisible.set(true);
+  }
+
+  openEditDialog(loan: Loan): void {
+    this.isEditMode.set(true);
+    this.selectedLoanId.set(loan.loanId ?? null);
+    this.loanForm.patchValue({
+      deviceId: loan.deviceId,
+      borrowerLastName: loan.borrowerLastName ?? '',
+      address: loan.address ?? '',
+      phone: loan.phone ?? '',
+      depositTypeId: loan.depositTypeId,
+      notes: loan.notes ?? '',
+    });
     this.dialogVisible.set(true);
   }
 
@@ -146,27 +164,52 @@ export class LoansComponent implements OnInit {
 
     this.saving.set(true);
     const formValue = this.loanForm.getRawValue();
-    const request: CreateLoan = {
-      deviceId: Number(formValue.deviceId),
-      borrowerLastName: formValue.borrowerLastName || null,
-      address: formValue.address || null,
-      phone: formValue.phone || null,
-      depositTypeId: Number(formValue.depositTypeId),
-      notes: formValue.notes || null,
-    };
 
-    this.loanService
-      .createLoan(request)
-      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.saving.set(false)))
-      .subscribe({
-        next: () => {
-          this.dialogVisible.set(false);
-          this.resetLoanForm();
-          this.loadLoans();
-          this.showSuccess('Loan created successfully');
-        },
-        error: () => this.showError('Unable to create loan. Please try again.')
-      });
+    if (this.isEditMode() && this.selectedLoanId() !== null) {
+      const request: UpdateLoan = {
+        deviceId: Number(formValue.deviceId),
+        borrowerLastName: formValue.borrowerLastName || null,
+        address: formValue.address || null,
+        phone: formValue.phone || null,
+        depositTypeId: Number(formValue.depositTypeId),
+        notes: formValue.notes || null,
+      };
+
+      this.loanService
+        .updateLoan(this.selectedLoanId()!, request)
+        .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.saving.set(false)))
+        .subscribe({
+          next: () => {
+            this.dialogVisible.set(false);
+            this.resetLoanForm();
+            this.loadLoans();
+            this.showSuccess('ההשאלה עודכנה בהצלחה');
+          },
+          error: () => this.showError('לא ניתן לעדכן השאלה. אנא נסה שוב.')
+        });
+    } else {
+      const request: CreateLoan = {
+        deviceId: Number(formValue.deviceId),
+        borrowerLastName: formValue.borrowerLastName || null,
+        address: formValue.address || null,
+        phone: formValue.phone || null,
+        depositTypeId: Number(formValue.depositTypeId),
+        notes: formValue.notes || null,
+      };
+
+      this.loanService
+        .createLoan(request)
+        .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.saving.set(false)))
+        .subscribe({
+          next: () => {
+            this.dialogVisible.set(false);
+            this.resetLoanForm();
+            this.loadLoans();
+            this.showSuccess('Loan created successfully');
+          },
+          error: () => this.showError('Unable to create loan. Please try again.')
+        });
+    }
   }
 
   openReturnDialog(loan: Loan): void {
