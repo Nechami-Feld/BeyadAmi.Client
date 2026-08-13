@@ -33,14 +33,13 @@
         <thead>
           <tr>
             <th>מספר מכשיר</th>
-            <th>Device Type</th>
             <th>סניף</th>
             <th>שם משאיל</th>
             <th>טלפון</th>
-            <th>Deposit Type</th>
-            <th>Deposit Amount</th>
+            <th>סוג הפקדה</th>
             <th>תאריך השאלה</th>
             <th>תאריך החזרה</th>
+            <th>הערות </th>
             <th>סטטוס</th>
             <th>פעולות</th>
           </tr>
@@ -48,15 +47,14 @@
         <tbody>
           <ng-container *ngIf="filteredLoans().length > 0; else emptyState">
             <tr *ngFor="let loan of filteredLoans(); trackBy: trackByLoanId">
-              <td>{{ loan.deviceNumber }}</td>
-              <td>{{ loan.categoryName }}</td>
+              <td>{{ loan.deviceNumber }} - {{ loan.categoryName }}, {{ loan.branchName }}</td>
               <td>{{ loan.branchName }}</td>
-              <td>{{ loan.borrowerFirstName }} {{ loan.borrowerLastName }}</td>
+              <td>{{ loan.borrowerLastName }}</td>
               <td>{{ loan.phone }}</td>
               <td>{{ loan.depositTypeName }}</td>
-              <td>{{ loan.depositAmount }}</td>
               <td>{{ loan.loanDate | date: 'dd/MM/yyyy' }}</td>
               <td>{{ loan.returnDate ? (loan.returnDate | date: 'dd/MM/yyyy') : '—' }}</td>
+              <td>{{ loan.notes }}</td>
               <td>
                 <span [class]="loan.isActive ? 'badge badge-success' : 'badge badge-pending'">
                   {{ loan.isActive ? 'Active' : 'Returned' }}
@@ -115,10 +113,6 @@
 
       <div class="form-row">
         <div class="field">
-          <label for="borrowerFirstName">שם פרטי</label>
-          <input pInputText id="borrowerFirstName" formControlName="borrowerFirstName" />
-        </div>
-        <div class="field">
           <label for="borrowerLastName">שם משפחה</label>
           <input pInputText id="borrowerLastName" formControlName="borrowerLastName" />
         </div>
@@ -136,16 +130,12 @@
 
       <div class="form-row">
         <div class="field">
-          <label for="depositTypeId">Deposit Type</label>
+          <label for="depositTypeId">סוג הפקדה</label>
           <select id="depositTypeId" class="field-select" formControlName="depositTypeId">
-            <option [value]="0" disabled>Select deposit type</option>
-            <option *ngFor="let dt of depositTypes()" [value]="dt.categoryId">{{ dt.categoryName }}</option>
+            <option [value]="0" disabled>בחר סוג הפקדה</option>
+            <option *ngFor="let dt of depositTypes()" [value]="dt.depositTypeId">{{ dt.depositTypeName }}</option>
           </select>
-          <small class="error" *ngIf="hasError(loanForm, 'depositTypeId', 'required') || hasError(loanForm, 'depositTypeId', 'min')">Deposit type is required.</small>
-        </div>
-        <div class="field">
-          <label for="depositAmount">Deposit Amount</label>
-          <input pInputText id="depositAmount" type="number" formControlName="depositAmount" />
+          <small class="error" *ngIf="hasError(loanForm, 'depositTypeId', 'required') || hasError(loanForm, 'depositTypeId', 'min')">חובה לבחור סוג הפקדה.</small>
         </div>
       </div>
 

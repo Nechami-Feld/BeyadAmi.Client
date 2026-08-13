@@ -21,6 +21,7 @@ import { Device } from '../../models/device';
 import { LoanService } from '../../services/loan.service';
 import { DepositTypeService } from '../../services/deposit-type.service';
 import { DeviceService } from '../../services/device.service';
+import { DepositType } from '../../models/deposit-type';
 
 @Component({
   selector: 'app-loans',
@@ -54,7 +55,7 @@ export class LoansComponent implements OnInit {
 
   readonly loans = signal<Loan[]>([]);
   readonly devices = signal<Device[]>([]);
-  readonly depositTypes = signal<DeviceCategory[]>([]);
+  readonly depositTypes = signal<DepositType[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly dialogVisible = signal(false);
@@ -76,7 +77,6 @@ export class LoansComponent implements OnInit {
         loan.deviceNumber,
         loan.categoryName,
         loan.branchName,
-        loan.borrowerFirstName,
         loan.borrowerLastName,
         loan.phone,
         loan.depositTypeName,
@@ -90,12 +90,10 @@ export class LoansComponent implements OnInit {
 
   readonly loanForm: FormGroup = this.fb.nonNullable.group({
     deviceId: [0, [Validators.required, Validators.min(1)]],
-    borrowerFirstName: [''],
     borrowerLastName: [''],
     address: [''],
     phone: [''],
     depositTypeId: [0, [Validators.required, Validators.min(1)]],
-    depositAmount: [null],
     notes: [''],
   });
 
@@ -150,12 +148,10 @@ export class LoansComponent implements OnInit {
     const formValue = this.loanForm.getRawValue();
     const request: CreateLoan = {
       deviceId: Number(formValue.deviceId),
-      borrowerFirstName: formValue.borrowerFirstName || null,
       borrowerLastName: formValue.borrowerLastName || null,
       address: formValue.address || null,
       phone: formValue.phone || null,
       depositTypeId: Number(formValue.depositTypeId),
-      depositAmount: formValue.depositAmount ?? null,
       notes: formValue.notes || null,
     };
 
@@ -269,12 +265,10 @@ export class LoansComponent implements OnInit {
   private resetLoanForm(): void {
     this.loanForm.reset({
       deviceId: 0,
-      borrowerFirstName: '',
       borrowerLastName: '',
       address: '',
       phone: '',
       depositTypeId: 0,
-      depositAmount: null,
       notes: '',
     });
     this.loanForm.markAsPristine();
