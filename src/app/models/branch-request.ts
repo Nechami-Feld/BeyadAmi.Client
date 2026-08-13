@@ -2,6 +2,8 @@ export interface BranchRequest {
   requestId?: number;
   branchId: number;
   branchName?: string | null;
+  city?: string | null;
+  street?: string | null;
   request: string;
   requestDate: string;
   isCompleted: boolean;

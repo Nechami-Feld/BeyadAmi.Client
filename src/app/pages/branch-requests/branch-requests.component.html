@@ -47,7 +47,7 @@
         <tbody>
           <ng-container *ngIf="filteredRequests().length > 0; else emptyState">
             <tr *ngFor="let request of filteredRequests(); trackBy: trackByRequestId">
-              <td>{{ request.branchName }}</td>
+              <td>{{ request.branchName }} - {{request.city}}, {{request.street}}</td>
               <td>{{ request.requestDate | date: 'dd/MM/yyyy' }}</td>
               <td>{{ request.request }}</td>
               <td>
