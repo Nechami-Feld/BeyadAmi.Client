@@ -9,13 +9,16 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { CompanyDto } from '../../models/company';
 import { ProductDto } from '../../models/product';
 import { CreateProductDto } from '../../models/create-product';
 import { UpdateProductDto } from '../../models/update-product';
+import { CompanyService } from '../../services/company.service';
 import { ProductService } from '../../services/product.service';
 
 @Component({
@@ -34,6 +37,7 @@ import { ProductService } from '../../services/product.service';
     TextareaModule,
     ToolbarModule,
     ToastModule,
+    SelectModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './products.component.html',
@@ -41,12 +45,14 @@ import { ProductService } from '../../services/product.service';
 })
 export class ProductsComponent implements OnInit {
   private readonly productService = inject(ProductService);
+  private readonly companyService = inject(CompanyService);
   private readonly fb = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly products = signal<ProductDto[]>([]);
+  readonly companies = signal<CompanyDto[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly searchTerm = signal('');
@@ -77,12 +83,20 @@ export class ProductsComponent implements OnInit {
   readonly productForm: FormGroup = this.fb.nonNullable.group({
     productName: ['', [Validators.required]],
     model: [''],
-    company: [''],
+    companyId: [null],
     notes: [''],
   });
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCompanies();
+  }
+
+  loadCompanies(): void {
+    this.companyService
+      .getCompanies()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ next: (companies) => this.companies.set(companies) });
   }
 
   loadProducts(): void {
@@ -129,17 +143,20 @@ export class ProductsComponent implements OnInit {
     this.saving.set(true);
     const formValue = this.productForm.getRawValue();
 
+    const selectedCompany = this.companies().find(c => c.companyId === formValue.companyId);
+    const companyName = selectedCompany?.companyName || null;
+
     const saveRequest = this.isEditMode() && this.selectedProductId() !== null
       ? this.productService.updateProduct(this.selectedProductId()!, {
           productName: formValue.productName,
           model: formValue.model || null,
-          company: formValue.company || null,
+          company: companyName,
           notes: formValue.notes || null,
         } as UpdateProductDto)
       : this.productService.createProduct({
           productName: formValue.productName,
           model: formValue.model || null,
-          company: formValue.company || null,
+          company: companyName,
           notes: formValue.notes || null,
         } as CreateProductDto);
 
@@ -196,10 +213,11 @@ export class ProductsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (product) => {
+          const matchedCompany = this.companies().find(c => c.companyName === product.company);
           this.productForm.patchValue({
             productName: product.productName,
             model: product.model ?? '',
-            company: product.company ?? '',
+            companyId: matchedCompany?.companyId ?? null,
             notes: product.notes ?? '',
           }, { emitEvent: false });
         },
@@ -211,7 +229,7 @@ export class ProductsComponent implements OnInit {
     this.productForm.reset({
       productName: '',
       model: '',
-      company: '',
+      companyId: null,
       notes: '',
     });
     this.productForm.markAsPristine();

@@ -91,7 +91,16 @@
 
       <div class="field">
         <label for="company">חברה</label>
-        <input pInputText id="company" formControlName="company" />
+        <p-select
+          id="company"
+          formControlName="companyId"
+          [options]="companies()"
+          optionLabel="companyName"
+          optionValue="companyId"
+          placeholder="בחר חברה"
+          [showClear]="true"
+          styleClass="w-full"
+        />
       </div>
 
       <div class="field">
