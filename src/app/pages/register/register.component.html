@@ -1,16 +1,31 @@
-<div class="login-page">
+<div class="register-page">
   <p-toast />
 
-  <div class="login-shell">
-    <p-card class="login-card">
-      <ng-template pTemplate="header">
-        <div class="login-header">
-          <div class="logo-circle">ב</div>
-          <h1>ביד עמי</h1>
-        </div>
-      </ng-template>
+  <!-- Brand panel -->
+  <div class="brand-panel">
+    <div class="brand-logo">ב</div>
+    <h1 class="brand-title">ביד עמי</h1>
+    <div class="brand-divider"></div>
+    <p class="brand-subtitle">מערכת לניהול מכשירים,<br />השאלות וסניפים</p>
+  </div>
 
-      <form [formGroup]="registerForm" (ngSubmit)="submit()" class="login-form">
+  <!-- Form panel -->
+  <div class="form-panel">
+    <div class="form-card">
+
+      <!-- Mobile logo -->
+      <div class="mobile-logo">
+        <div class="mobile-logo-circle">ב</div>
+        <span class="mobile-logo-text">ביד עמי</span>
+      </div>
+
+      <div class="card-header">
+        <h2>הרשמה</h2>
+        <p>צור חשבון חדש במערכת</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submit()" class="register-form">
+
         <div class="field">
           <label for="userName">שם משתמש</label>
           <input id="userName" pInputText formControlName="userName" autocomplete="username" />
@@ -56,20 +71,17 @@
           <small class="error" *ngIf="hasPasswordMismatch()">הסיסמאות אינן זהות</small>
         </div>
 
-        <button
-          pButton
-          type="submit"
-          class="login-button"
-          [disabled]="loading() || registerForm.invalid"
-        >
-          <span *ngIf="!loading()">הרשמה</span>
-          <span *ngIf="loading()">מוסיף משתמש...</span>
+        <button type="submit" class="submit-btn" [disabled]="loading() || registerForm.invalid">
+          <i class="pi pi-user-plus" *ngIf="!loading()"></i>
+          <i class="pi pi-spin pi-spinner" *ngIf="loading()"></i>
+          <span>{{ loading() ? 'מוסיף משתמש...' : 'הרשמה' }}</span>
         </button>
 
         <div class="auth-link-row">
           <a routerLink="/login" class="auth-link">כבר יש לך חשבון? להתחברות</a>
         </div>
+
       </form>
-    </p-card>
+    </div>
   </div>
 </div>

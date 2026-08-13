@@ -1,14 +1,28 @@
 <div class="login-page">
   <p-toast />
 
-  <div class="login-shell">
-    <p-card class="login-card">
-      <ng-template pTemplate="header">
-        <div class="login-header">
-          <div class="logo-circle">ב</div>
-          <h1>ביד עמי</h1>
-        </div>
-      </ng-template>
+  <!-- Brand panel -->
+  <div class="brand-panel">
+    <div class="brand-logo">ב</div>
+    <h1 class="brand-title">ביד עמי</h1>
+    <div class="brand-divider"></div>
+    <p class="brand-subtitle">מערכת לניהול מכשירים,<br />השאלות וסניפים</p>
+  </div>
+
+  <!-- Form panel -->
+  <div class="form-panel">
+    <div class="form-card">
+
+      <!-- Mobile logo -->
+      <div class="mobile-logo">
+        <div class="mobile-logo-circle">ב</div>
+        <span class="mobile-logo-text">ביד עמי</span>
+      </div>
+
+      <div class="card-header">
+        <h2>התחברות</h2>
+        <p>הזן את פרטי הכניסה שלך</p>
+      </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-form">
         <div class="field">
@@ -32,20 +46,17 @@
           <small class="error" *ngIf="isPasswordInvalid()">שדה זה הוא חובה</small>
         </div>
 
-        <button
-          pButton
-          type="submit"
-          class="login-button"
-          [disabled]="loading() || loginForm.invalid"
-        >
-          <span *ngIf="!loading()">התחברות</span>
-          <span *ngIf="loading()">מתחבר...</span>
+        <button type="submit" class="submit-btn" [disabled]="loading() || loginForm.invalid">
+          <i class="pi pi-sign-in" *ngIf="!loading()"></i>
+          <i class="pi pi-spin pi-spinner" *ngIf="loading()"></i>
+          <span>{{ loading() ? 'מתחבר...' : 'התחברות' }}</span>
         </button>
 
         <div class="auth-link-row">
           <a routerLink="/register" class="auth-link">אין לך חשבון? להרשמה</a>
         </div>
       </form>
-    </p-card>
+
+    </div>
   </div>
 </div>
