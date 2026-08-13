@@ -1,0 +1,111 @@
+<div class="products-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="Loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת מוצר
+      </button>
+    </div>
+    <h2>מוצרים</h2>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="איתור מוצר" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>שם מוצר</th>
+            <th>דגם</th>
+            <th>חברה</th>
+            <th>הערות</th>
+            <th>מספר רכישות</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredProducts().length > 0; else emptyState">
+            <tr *ngFor="let product of filteredProducts(); trackBy: trackByProductId">
+              <td>{{ product.productName }}</td>
+              <td>{{ product.model }}</td>
+              <td>{{ product.company }}</td>
+              <td>{{ product.notes }}</td>
+              <td>{{ product.purchasesCount }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(product)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteProduct(product)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="6" class="empty-state">לא נמצאו מוצרים.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog
+    [header]="isEditMode() ? 'עריכת מוצר' : 'הוספת מוצר'"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [style]="{ width: '38rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="product-form">
+
+      <div class="field">
+        <label for="productName">שם מוצר</label>
+        <input pInputText id="productName" formControlName="productName" />
+        <small class="error" *ngIf="hasError('productName', 'required')">שם מוצר הוא שדה חובה.</small>
+      </div>
+
+      <div class="field">
+        <label for="model">דגם</label>
+        <input pInputText id="model" formControlName="model" />
+      </div>
+
+      <div class="field">
+        <label for="company">חברה</label>
+        <input pInputText id="company" formControlName="company" />
+      </div>
+
+      <div class="field">
+        <label for="notes">הערות</label>
+        <textarea pInputTextarea id="notes" rows="3" formControlName="notes"></textarea>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="productForm.invalid || saving()" (click)="saveProduct()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>

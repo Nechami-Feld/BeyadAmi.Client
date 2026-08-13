@@ -11,6 +11,7 @@ import { BranchRequestsComponent } from './pages/branch-requests/branch-requests
 import { DevicesComponent } from './pages/devices/devices.component';
 import { LoansComponent } from './pages/loans/loans.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
+import { ProductsComponent } from './pages/products/products.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'devices', component: DevicesComponent, canActivate: [authGuard] },
   { path: 'loans', component: LoansComponent, canActivate: [authGuard] },
   { path: 'purchases', component: PurchasesComponent, canActivate: [authGuard] },
+  { path: 'products', component: ProductsComponent, canActivate: [authGuard] },
   { path: 'admin', canActivate: [authGuard, adminGuard], children: [
     { path: 'users', redirectTo: '/branches', pathMatch: 'full' },
     { path: '', redirectTo: '/branches', pathMatch: 'full' }

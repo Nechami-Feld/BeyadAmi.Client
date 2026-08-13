@@ -30,6 +30,7 @@ export class App {
       { label: 'מכשירים', route: '/devices', icon: 'pi pi-mobile' },
       { label: 'השאלות', route: '/loans', icon: 'pi pi-arrow-right-arrow-left' },
       { label: 'רכישות', route: '/purchases', icon: 'pi pi-shopping-cart' },
+      { label: 'מוצרים', route: '/products', icon: 'pi pi-box' },
     ];
 
     if (this.isAdmin()) {
