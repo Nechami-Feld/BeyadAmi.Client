@@ -12,6 +12,7 @@ import { DevicesComponent } from './pages/devices/devices.component';
 import { LoansComponent } from './pages/loans/loans.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
 import { ProductsComponent } from './pages/products/products.component';
+import { CompaniesComponent } from './pages/companies/companies.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'loans', component: LoansComponent, canActivate: [authGuard] },
   { path: 'purchases', component: PurchasesComponent, canActivate: [authGuard] },
   { path: 'products', component: ProductsComponent, canActivate: [authGuard] },
+  { path: 'companies', component: CompaniesComponent, canActivate: [authGuard] },
   { path: 'admin', canActivate: [authGuard, adminGuard], children: [
     { path: 'users', redirectTo: '/branches', pathMatch: 'full' },
     { path: '', redirectTo: '/branches', pathMatch: 'full' }

@@ -31,6 +31,7 @@ export class App {
       { label: 'השאלות', route: '/loans', icon: 'pi pi-arrow-right-arrow-left' },
       { label: 'רכישות', route: '/purchases', icon: 'pi pi-shopping-cart' },
       { label: 'מוצרים', route: '/products', icon: 'pi pi-box' },
+      { label: 'חברות', route: '/companies', icon: 'pi pi-building-columns' },
     ];
 
     if (this.isAdmin()) {

@@ -1,0 +1,88 @@
+<div class="companies-page">
+  <p-toast />
+  <p-confirmdialog />
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <p-progressspinner ariaLabel="Loading"></p-progressspinner>
+  </div>
+
+  <div class="page-header">
+    <div class="toolbar-actions">
+      <button type="button" class="primary-btn" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        הוספת חברה
+      </button>
+    </div>
+    <h2>חברות</h2>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <span class="p-input-icon-left search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="איתור חברה" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+      </span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="companies-table">
+        <thead>
+          <tr>
+            <th>שם חברה</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="filteredCompanies().length > 0; else emptyState">
+            <tr *ngFor="let company of filteredCompanies(); trackBy: trackByCompanyId">
+              <td>{{ company.companyName }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="icon-btn secondary" (click)="openEditDialog(company)">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button type="button" class="icon-btn danger" (click)="deleteCompany(company)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #emptyState>
+            <tr>
+              <td colspan="2" class="empty-state">לא נמצאו חברות.</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p-dialog
+    [header]="isEditMode() ? 'עריכת חברה' : 'הוספת חברה'"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [style]="{ width: '38rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="companyForm" (ngSubmit)="saveCompany()" class="company-form">
+
+      <div class="field">
+        <label for="companyName">שם חברה</label>
+        <input pInputText id="companyName" formControlName="companyName" />
+        <small class="error" *ngIf="hasError('companyName', 'required')">שם חברה הוא שדה חובה.</small>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <button type="button" class="secondary-btn" (click)="closeDialog()">ביטול</button>
+        <button type="button" class="primary-btn" [disabled]="companyForm.invalid || saving()" (click)="saveCompany()">
+          <i class="pi pi-check"></i>
+          שמירה
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>
