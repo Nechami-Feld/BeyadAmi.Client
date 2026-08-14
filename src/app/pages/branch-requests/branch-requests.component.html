@@ -93,7 +93,7 @@
       <div class="field">
         <label for="branchId">סניף</label>
         <select id="branchId" class="field-select" formControlName="branchId">
-          <option [value]="0" disabled>Select a branch</option>
+          <option [value]="0" disabled>בחר סניף</option>
           <option *ngFor="let branch of branches()" [value]="branch.branchId">{{ branch.branchName }}</option>
         </select>
         <small class="error" *ngIf="hasError('branchId', 'required') || hasError('branchId', 'min')">Branch is required.</small>

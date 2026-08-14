@@ -20,7 +20,7 @@
     <div class="table-toolbar">
       <span class="p-input-icon-left search-box">
         <i class="pi pi-search"></i>
-        <input pInputText type="text" placeholder="Search device" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        <input pInputText type="text" placeholder="איתור מכשיר" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
       </span>
 
       <div class="filter-branch">
@@ -109,7 +109,7 @@
       <div class="field">
         <label for="categoryId">קטגוריה</label>
         <select id="categoryId" class="field-select" formControlName="categoryId">
-          <option [value]="0" disabled>Select a category</option>
+          <option [value]="0" disabled>בחר קטגוריה</option>
           <option *ngFor="let type of deviceTypes()" [value]="type.categoryId">{{ type.categoryName }}</option>
         </select>
         <small class="error" *ngIf="hasError('categoryId', 'required') || hasError('categoryId', 'min')">Category is required.</small>
@@ -118,7 +118,7 @@
       <div class="field">
         <label for="branchId">סניף</label>
         <select id="branchId" class="field-select" formControlName="branchId">
-          <option [value]="0" disabled>Select a branch</option>
+          <option [value]="0" disabled>בחר סניף</option>
           <option *ngFor="let branch of branches()" [value]="branch.branchId">{{ branch.branchName }}</option>
         </select>
         <small class="error" *ngIf="hasError('branchId', 'required') || hasError('branchId', 'min')">Branch is required.</small>

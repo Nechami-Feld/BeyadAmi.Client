@@ -12,7 +12,8 @@
         <i class="pi pi-plus"></i>
         הוספת השאלה
       </button>
-      <button type="button" [class]="showActiveOnly() ? 'secondary-btn active-filter-btn' : 'secondary-btn'" (click)="toggleActiveFilter()">
+      <button type="button" [class]="showActiveOnly() ? 'secondary-btn active-filter-btn' : 'secondary-btn'"
+        (click)="toggleActiveFilter()">
         <i class="pi pi-filter"></i>
         {{ showActiveOnly() ? 'הצג הכל' : 'הצג פעילים בלבד' }}
       </button>
@@ -24,7 +25,8 @@
     <div class="table-toolbar">
       <span class="p-input-icon-left search-box">
         <i class="pi pi-search"></i>
-        <input pInputText type="text" placeholder="Search loan" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        <input pInputText type="text" placeholder="איתור השאלה" [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)" />
       </span>
     </div>
 
@@ -65,13 +67,8 @@
                   <button type="button" class="icon-btn secondary" (click)="openEditDialog(loan)" title="עריכה">
                     <i class="pi pi-pencil"></i>
                   </button>
-                  <button
-                    type="button"
-                    class="icon-btn secondary"
-                    (click)="openReturnDialog(loan)"
-                    *ngIf="loan.isActive"
-                    title="Return"
-                  >
+                  <button type="button" class="icon-btn secondary" (click)="openReturnDialog(loan)"
+                    *ngIf="loan.isActive" title="Return">
                     <i class="pi pi-undo"></i>
                   </button>
                   <button type="button" class="icon-btn danger" (click)="deleteLoan(loan)" title="Delete">
@@ -93,32 +90,26 @@
   </div>
 
   <!-- Add/Edit Loan Dialog -->
-  <p-dialog
-    [header]="isEditMode() ? 'עריכת השאלה' : 'Add Loan'"
-    [visible]="dialogVisible()"
-    (visibleChange)="dialogVisible.set($event)"
-    [modal]="true"
-    [style]="{ width: '42rem' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
+  <p-dialog [header]="isEditMode() ? 'עריכת השאלה' : 'הוספת השאלה'" [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)" [modal]="true" [style]="{ width: '42rem' }" [draggable]="false"
+    [resizable]="false">
     <form [formGroup]="loanForm" (ngSubmit)="saveLoan()" class="loan-form">
       <div class="field">
         <label for="deviceId">מכשיר</label>
         <select id="deviceId" class="field-select" formControlName="deviceId">
-          <option [value]="0" disabled>Select a device</option>
+          <option [value]="0" disabled>בחר מכשיר</option>
           <option *ngFor="let device of devices()" [value]="device.deviceId">
             {{ device.deviceNumber }} — {{ device.categoryName }} ({{ device.branchName }})
           </option>
         </select>
-        <small class="error" *ngIf="hasError(loanForm, 'deviceId', 'required') || hasError(loanForm, 'deviceId', 'min')">Device is required.</small>
+        <small class="error"
+          *ngIf="hasError(loanForm, 'deviceId', 'required') || hasError(loanForm, 'deviceId', 'min')">Device is
+          required.</small>
       </div>
 
-      <div class="form-row">
-        <div class="field">
-          <label for="borrowerLastName">שם משפחה</label>
-          <input pInputText id="borrowerLastName" formControlName="borrowerLastName" />
-        </div>
+      <div class="field">
+        <label for="borrowerLastName">שם משפחה</label>
+        <input pInputText id="borrowerLastName" formControlName="borrowerLastName" />
       </div>
 
       <div class="field">
@@ -131,15 +122,15 @@
         <input pInputText id="phone" formControlName="phone" />
       </div>
 
-      <div class="form-row">
-        <div class="field">
-          <label for="depositTypeId">סוג הפקדה</label>
-          <select id="depositTypeId" class="field-select" formControlName="depositTypeId">
-            <option [value]="0" disabled>בחר סוג הפקדה</option>
-            <option *ngFor="let dt of depositTypes()" [value]="dt.depositTypeId">{{ dt.depositTypeName }}</option>
-          </select>
-          <small class="error" *ngIf="hasError(loanForm, 'depositTypeId', 'required') || hasError(loanForm, 'depositTypeId', 'min')">חובה לבחור סוג הפקדה.</small>
-        </div>
+      <div class="field">
+        <label for="depositTypeId">סוג הפקדה</label>
+        <select id="depositTypeId" class="field-select" formControlName="depositTypeId">
+          <option [value]="0" disabled>בחר סוג הפקדה</option>
+          <option *ngFor="let dt of depositTypes()" [value]="dt.depositTypeId">{{ dt.depositTypeName }}</option>
+        </select>
+        <small class="error"
+          *ngIf="hasError(loanForm, 'depositTypeId', 'required') || hasError(loanForm, 'depositTypeId', 'min')">חובה
+          לבחור סוג הפקדה.</small>
       </div>
 
       <div class="field">
@@ -158,15 +149,8 @@
   </p-dialog>
 
   <!-- Return Loan Dialog -->
-  <p-dialog
-    header="Return Device"
-    [visible]="returnDialogVisible()"
-    (visibleChange)="returnDialogVisible.set($event)"
-    [modal]="true"
-    [style]="{ width: '32rem' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
+  <p-dialog header="החזרת מכשיר" [visible]="returnDialogVisible()" (visibleChange)="returnDialogVisible.set($event)"
+    [modal]="true" [style]="{ width: '32rem' }" [draggable]="false" [resizable]="false">
     <form [formGroup]="returnForm" (ngSubmit)="returnLoan()" class="loan-form">
       <div class="field">
         <label for="returnDate">תאריך החזרה</label>

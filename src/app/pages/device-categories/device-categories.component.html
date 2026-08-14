@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  <p-dialog [header]="isEditMode() ? 'Edit Device Category' : 'Add Device Category'" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [modal]="true" [style]="{ width: '38rem' }" [draggable]="false" [resizable]="false">
+  <p-dialog [header]="isEditMode() ? 'עריכת קטגוריה' : 'הוספת קטגוריה'" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [modal]="true" [style]="{ width: '38rem' }" [draggable]="false" [resizable]="false">
     <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" class="category-form">
       <div class="field">
         <label for="categoryName">שם קטגוריה</label>
