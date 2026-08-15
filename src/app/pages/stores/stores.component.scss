@@ -34,3 +34,13 @@
 .error {
   color: #d32f2f;
 }
+
+.mailto-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.mailto-link:hover {
+  text-decoration: underline;
+}

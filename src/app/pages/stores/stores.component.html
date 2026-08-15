@@ -43,7 +43,10 @@
               <td>{{ store.storeName }}</td>
               <td>{{ store.address }}</td>
               <td>{{ store.phone }}</td>
-              <td>{{ store.email || '-' }}</td>
+              <td>
+                <a *ngIf="store.email" [href]="'https://mail.google.com/mail/?view=cm&to=' + store.email" target="_blank" class="mailto-link">{{ store.email }}</a>
+                <span *ngIf="!store.email">-</span>
+              </td>
               <td>{{ store.notes }}</td>
               <td>
                 <p-toggleswitch [ngModel]="store.isActive" (ngModelChange)="toggleStoreActive(store)"></p-toggleswitch>
