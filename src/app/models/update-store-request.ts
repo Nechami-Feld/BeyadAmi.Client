@@ -5,4 +5,5 @@ export interface UpdateStoreRequest {
   email?: string | null;
   notes: string;
   productsCount: number;
+  isActive: boolean;
 }

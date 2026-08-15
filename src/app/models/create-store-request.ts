@@ -5,4 +5,5 @@ export interface CreateStoreRequest {
   email?: string | null;
   notes: string;
   productsCount: number;
+  isActive: boolean;
 }

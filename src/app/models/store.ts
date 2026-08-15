@@ -5,4 +5,5 @@ export interface StoreDto {
   phone: string;
   email?: string | null;
   notes: string;
+  isActive: boolean;
 }

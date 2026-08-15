@@ -35,7 +35,7 @@
             <th>טלפון</th>
             <th>מייל</th>
             <th>הערות</th>
-            <th>פעיל</th>
+            <th>האם פעיל</th>
             <th>פעולות</th>
           </tr>
         </thead>
@@ -49,7 +49,9 @@
               <td>{{ branch.phone }}</td>
               <td>{{ branch.email }}</td>
               <td>{{ branch.notes }}</td>
-              <td>{{ branch.isActive ? 'כן' : 'לא' }}</td>
+              <td>
+                <p-toggleswitch [ngModel]="branch.isActive" (ngModelChange)="toggleBranchActive(branch)"></p-toggleswitch>
+              </td>
               <td>
                 <div class="action-buttons">
                   <button type="button" class="icon-btn secondary" (click)="openEditDialog(branch)">

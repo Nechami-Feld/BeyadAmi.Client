@@ -33,6 +33,7 @@
             <th>טלפון</th>
             <th>כתובת מייל</th>
             <th>הערות</th>
+            <th>האם פעיל</th>
             <th>פעולות</th>
           </tr>
         </thead>
@@ -44,6 +45,9 @@
               <td>{{ store.phone }}</td>
               <td>{{ store.email || '-' }}</td>
               <td>{{ store.notes }}</td>
+              <td>
+                <p-toggleswitch [ngModel]="store.isActive" (ngModelChange)="toggleStoreActive(store)"></p-toggleswitch>
+              </td>
               <td>
                 <div class="action-buttons">
                   <button type="button" class="icon-btn secondary" (click)="openEditDialog(store)">
@@ -59,7 +63,7 @@
 
           <ng-template #emptyState>
             <tr>
-              <td colspan="5" class="empty-state">No stores found.</td>
+              <td colspan="7" class="empty-state">No stores found.</td>
             </tr>
           </ng-template>
         </tbody>

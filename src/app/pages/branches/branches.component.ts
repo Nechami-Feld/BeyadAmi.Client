@@ -12,6 +12,7 @@ import { SortIcon, TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { Branch } from '../../models/branch';
 import { CreateBranchRequest } from '../../models/create-branch-request';
 import { UpdateBranchRequest } from '../../models/update-branch-request';
@@ -33,7 +34,8 @@ import { BranchService } from '../../services/branch.service';
     InputTextModule,
     TextareaModule,
     ToolbarModule,
-    ToastModule
+    ToastModule,
+    ToggleSwitchModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './branches.component.html',
@@ -174,6 +176,30 @@ export class BranchesComponent implements OnInit {
         this.showError(this.isEditMode() ? 'Unable to update branch. Please try again.' : 'Unable to create branch. Please try again.');
       }
     });
+  }
+
+  toggleBranchActive(branch: Branch): void {
+    const updated: UpdateBranchRequest = {
+      branchName: branch.branchName,
+      city: branch.city ?? null,
+      street: branch.street ?? null,
+      apartment: branch.apartment ?? null,
+      phone: branch.phone ?? null,
+      email: branch.email ?? null,
+      notes: branch.notes ?? null,
+      isActive: !branch.isActive,
+    };
+
+    this.branchService
+      .updateBranch(branch.branchId!, updated)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.branches.update(list => list.map(b => b.branchId === branch.branchId ? { ...b, isActive: !branch.isActive } : b));
+          this.showSuccess('הסטטוס עודכן בהצלחה');
+        },
+        error: () => this.showError('לא ניתן לעדכן סטטוס. אנא נסה שוב.')
+      });
   }
 
   deleteBranch(branch: Branch): void {

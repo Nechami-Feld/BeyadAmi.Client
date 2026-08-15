@@ -51,9 +51,7 @@
               <td>{{ request.requestDate | date: 'dd/MM/yyyy' }}</td>
               <td>{{ request.request }}</td>
               <td>
-                <span [class]="request.isCompleted ? 'badge badge-success' : 'badge badge-pending'">
-                  {{ request.isCompleted ? 'Yes' : 'No' }}
-                </span>
+                <p-toggleswitch [ngModel]="request.isCompleted" (ngModelChange)="toggleRequestCompleted(request)"></p-toggleswitch>
               </td>
               <td>{{ request.completedDate ? (request.completedDate | date: 'dd/MM/yyyy') : '—' }}</td>
               <td>{{ request.notes }}</td>

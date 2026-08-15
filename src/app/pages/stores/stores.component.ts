@@ -12,6 +12,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { CreateStoreRequest } from '../../models/create-store-request';
 import { StoreDto } from '../../models/store';
 import { UpdateStoreRequest } from '../../models/update-store-request';
@@ -31,7 +32,8 @@ import { StoreService } from '../../services/store.service';
     ProgressSpinnerModule,
     InputTextModule,
     ToolbarModule,
-    ToastModule
+    ToastModule,
+    ToggleSwitchModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './stores.component.html',
@@ -78,7 +80,8 @@ export class StoresComponent implements OnInit {
     phone: [''],
     email: [''],
     notes: [''],
-    productsCount: [0, [Validators.required, Validators.min(0)]]
+    productsCount: [0, [Validators.required, Validators.min(0)]],
+    isActive: [true]
   });
 
   ngOnInit(): void {
@@ -135,7 +138,8 @@ export class StoresComponent implements OnInit {
       phone: formValue.phone ?? '',
       email: formValue.email ?? null,
       notes: formValue.notes ?? '',
-      productsCount: Number(formValue.productsCount ?? 0)
+      productsCount: Number(formValue.productsCount ?? 0),
+      isActive: formValue.isActive ?? true
     };
 
     const saveRequest = this.isEditMode() && this.selectedStoreId() !== null
@@ -152,6 +156,29 @@ export class StoresComponent implements OnInit {
           this.showSuccess(this.isEditMode() ? 'Store updated successfully' : 'Store created successfully');
         },
         error: () => this.showError(this.isEditMode() ? 'Unable to update store. Please try again.' : 'Unable to create store. Please try again.')
+      });
+  }
+
+  toggleStoreActive(store: StoreDto): void {
+    const updated: UpdateStoreRequest = {
+      storeName: store.storeName,
+      address: store.address,
+      phone: store.phone,
+      email: store.email ?? null,
+      notes: store.notes,
+      productsCount: 0,
+      isActive: !store.isActive,
+    };
+
+    this.storeService
+      .updateStore(store.storeId, updated)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.stores.update(list => list.map(s => s.storeId === store.storeId ? { ...s, isActive: !store.isActive } : s));
+          this.showSuccess('הסטטוס עודכן בהצלחה');
+        },
+        error: () => this.showError('לא ניתן לעדכן סטטוס. אנא נסה שוב.')
       });
   }
 

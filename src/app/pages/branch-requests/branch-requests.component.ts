@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { BranchRequest } from '../../models/branch-request';
 import { Branch } from '../../models/branch';
 import { CreateBranchRequestRequest } from '../../models/create-branch-request-request';
@@ -35,7 +36,8 @@ import { BranchService } from '../../services/branch.service';
     InputTextModule,
     TextareaModule,
     ToolbarModule,
-    ToastModule
+    ToastModule,
+    ToggleSwitchModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './branch-requests.component.html',
@@ -170,6 +172,29 @@ export class BranchRequestsComponent implements OnInit {
           this.showSuccess(this.isEditMode() ? 'Branch request updated successfully' : 'Branch request created successfully');
         },
         error: () => this.showError(this.isEditMode() ? 'Unable to update branch request. Please try again.' : 'Unable to create branch request. Please try again.')
+      });
+  }
+
+  toggleRequestCompleted(request: BranchRequest): void {
+    const updated: UpdateBranchRequestRequest = {
+      branchId: request.branchId,
+      request: request.request,
+      requestDate: request.requestDate,
+      isCompleted: !request.isCompleted,
+      completedDate: !request.isCompleted ? (request.completedDate ?? null) : null,
+      notes: request.notes ?? null,
+    };
+
+    this.branchRequestService
+      .updateBranchRequest(request.requestId!, updated)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.requests.update(list => list.map(r => r.requestId === request.requestId ? { ...r, isCompleted: !request.isCompleted } : r));
+          this.loadRequests();
+          this.showSuccess('הסטטוס עודכן בהצלחה');
+        },
+        error: () => this.showError('לא ניתן לעדכן סטטוס. אנא נסה שוב.')
       });
   }
 
