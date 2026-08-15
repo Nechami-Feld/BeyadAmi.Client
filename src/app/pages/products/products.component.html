@@ -32,7 +32,6 @@
             <th>דגם</th>
             <th>חברה</th>
             <th>הערות</th>
-            <th>מספר רכישות</th>
             <th>פעולות</th>
           </tr>
         </thead>
@@ -43,7 +42,6 @@
               <td>{{ product.model }}</td>
               <td>{{ product.company }}</td>
               <td>{{ product.notes }}</td>
-              <td>{{ product.purchasesCount }}</td>
               <td>
                 <div class="action-buttons">
                   <button type="button" class="icon-btn secondary" (click)="openEditDialog(product)">

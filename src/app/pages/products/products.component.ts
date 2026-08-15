@@ -73,8 +73,7 @@ export class ProductsComponent implements OnInit {
         p.productName,
         p.model,
         p.company,
-        p.notes,
-        String(p.purchasesCount),
+        p.notes
       ];
       return values.some((v) => v?.toLowerCase().includes(term));
     });
