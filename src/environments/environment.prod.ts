@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:5126/'
+  apiUrl: 'https://beyadami-server.onrender.com/'
 };
