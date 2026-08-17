@@ -96,7 +96,7 @@ export class StoresComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (stores) => this.stores.set(Array.isArray(stores) ? stores : []),
-        error: () => this.showError('Unable to load stores. Please try again.')
+        error: () => this.showError('לא ניתן לטעון חנויות. אנא נסה שוב.')
       });
   }
 
@@ -153,9 +153,9 @@ export class StoresComponent implements OnInit {
           this.dialogVisible.set(false);
           this.resetForm();
           this.loadStores();
-          this.showSuccess(this.isEditMode() ? 'Store updated successfully' : 'Store created successfully');
+          this.showSuccess(this.isEditMode() ? 'החנות עודכנה בהצלחה' : 'החנות נוצרה בהצלחה');
         },
-        error: () => this.showError(this.isEditMode() ? 'Unable to update store. Please try again.' : 'Unable to create store. Please try again.')
+        error: () => this.showError(this.isEditMode() ? 'לא ניתן לעדכן את החנות. אנא נסה שוב.' : 'לא ניתן ליצור את החנות. אנא נסה שוב.')
       });
   }
 
@@ -184,11 +184,11 @@ export class StoresComponent implements OnInit {
 
   deleteStore(store: StoreDto): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${store.storeName}?`,
-      header: 'Delete Store',
+      message: `האם אתה בטוח שברצונך למחוק את ${store.storeName}?`,
+      header: 'מחיקת חנות',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: 'מחק',
+      rejectLabel: 'ביטול',
       accept: () => {
         if (store.storeId === undefined) {
           return;
@@ -201,9 +201,9 @@ export class StoresComponent implements OnInit {
           .subscribe({
             next: () => {
               this.loadStores();
-              this.showSuccess('Store deleted successfully');
+              this.showSuccess('החנות נמחקה בהצלחה');
             },
-            error: () => this.showError('Unable to delete store. Please try again.')
+            error: () => this.showError('לא ניתן למחוק את החנות. אנא נסה שוב.')
           });
       }
     });
@@ -226,7 +226,7 @@ export class StoresComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (store) => this.storeForm.patchValue(store, { emitEvent: false }),
-        error: () => this.showError('Unable to load store details.')
+        error: () => this.showError('לא ניתן לטעון פרטי החנות.')
       });
   }
 
@@ -244,10 +244,10 @@ export class StoresComponent implements OnInit {
   }
 
   private showSuccess(message: string): void {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+    this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: message });
   }
 
   private showError(message: string): void {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+    this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: message });
   }
 }

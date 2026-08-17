@@ -108,7 +108,7 @@ export class BranchRequestsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (requests) => this.requests.set(Array.isArray(requests) ? requests : []),
-        error: () => this.showError('Unable to load branch requests. Please try again.')
+        error: () => this.showError('לא ניתן לטעון את הבקשות. אנא נסה שוב.')
       });
   }
 
@@ -169,9 +169,9 @@ export class BranchRequestsComponent implements OnInit {
           this.dialogVisible.set(false);
           this.resetForm();
           this.loadRequests();
-          this.showSuccess(this.isEditMode() ? 'Branch request updated successfully' : 'Branch request created successfully');
+          this.showSuccess(this.isEditMode() ? 'הבקשה עודכנה בהצלחה' : 'הבקשה נוצרה בהצלחה');
         },
-        error: () => this.showError(this.isEditMode() ? 'Unable to update branch request. Please try again.' : 'Unable to create branch request. Please try again.')
+        error: () => this.showError(this.isEditMode() ? 'לא ניתן לעדכן את הבקשה. אנא נסה שוב.' : 'לא ניתן ליצור את הבקשה. אנא נסה שוב.')
       });
   }
 
@@ -200,11 +200,11 @@ export class BranchRequestsComponent implements OnInit {
 
   deleteRequest(request: BranchRequest): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete this request?`,
-      header: 'Delete Branch Request',
+      message: `האם אתה בטוח שברצונך למחוק בקשה זו?`,
+      header: 'מחיקת בקשה',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: 'מחק',
+      rejectLabel: 'ביטול',
       accept: () => {
         if (request.requestId === undefined) {
           return;
@@ -217,9 +217,9 @@ export class BranchRequestsComponent implements OnInit {
           .subscribe({
             next: () => {
               this.loadRequests();
-              this.showSuccess('Branch request deleted successfully');
+              this.showSuccess('הבקשה נמחקה בהצלחה');
             },
-            error: () => this.showError('Unable to delete branch request. Please try again.')
+            error: () => this.showError('לא ניתן למחוק את הבקשה. אנא נסה שוב.')
           });
       }
     });
@@ -240,7 +240,7 @@ export class BranchRequestsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (branches) => this.branches.set(Array.isArray(branches) ? branches : []),
-        error: () => this.showError('Unable to load branches.')
+        error: () => this.showError('לא ניתן לטעון סניפים.')
       });
   }
 
@@ -252,7 +252,7 @@ export class BranchRequestsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (request) => this.requestForm.patchValue(request, { emitEvent: false }),
-        error: () => this.showError('Unable to load branch request details.')
+        error: () => this.showError('לא ניתן לטעון פרטי הבקשה.')
       });
   }
 
@@ -270,10 +270,10 @@ export class BranchRequestsComponent implements OnInit {
   }
 
   private showSuccess(message: string): void {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+    this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: message });
   }
 
   private showError(message: string): void {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+    this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: message });
   }
 }

@@ -121,7 +121,7 @@ export class LoansComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (loans) => this.loans.set(Array.isArray(loans) ? loans : []),
-        error: () => this.showError('Unable to load loans. Please try again.')
+        error: () => this.showError('לא ניתן לטעון השאלות. אנא נסה שוב.')
       });
   }
 
@@ -205,9 +205,9 @@ export class LoansComponent implements OnInit {
             this.dialogVisible.set(false);
             this.resetLoanForm();
             this.loadLoans();
-            this.showSuccess('Loan created successfully');
+            this.showSuccess('השאלה נוצרה בהצלחה');
           },
-          error: () => this.showError('Unable to create loan. Please try again.')
+          error: () => this.showError('לא ניתן ליצור השאלה. אנא נסה שוב.')
         });
     }
   }
@@ -243,19 +243,19 @@ export class LoansComponent implements OnInit {
           this.returnDialogVisible.set(false);
           this.resetReturnForm();
           this.loadLoans();
-          this.showSuccess('Loan returned successfully');
+          this.showSuccess('השאלה הוחזרה בהצלחה');
         },
-        error: () => this.showError('Unable to return loan. Please try again.')
+        error: () => this.showError('לא ניתן להחזיר את ההשאלה. אנא נסה שוב.')
       });
   }
 
   deleteLoan(loan: Loan): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete this loan?`,
-      header: 'Delete Loan',
+      message: `האם אתה בטוח שברצונך למחוק השאלה זו?`,
+      header: 'מחיקת השאלה',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: 'מחק',
+      rejectLabel: 'ביטול',
       accept: () => {
         if (loan.loanId === undefined) {
           return;
@@ -268,9 +268,9 @@ export class LoansComponent implements OnInit {
           .subscribe({
             next: () => {
               this.loadLoans();
-              this.showSuccess('Loan deleted successfully');
+              this.showSuccess('השאלה נמחקה בהצלחה');
             },
-            error: () => this.showError('Unable to delete loan. Please try again.')
+            error: () => this.showError('לא ניתן למחוק את ההשאלה. אנא נסה שוב.')
           });
       }
     });
@@ -291,7 +291,7 @@ export class LoansComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (devices) => this.devices.set(Array.isArray(devices) ? devices : []),
-        error: () => this.showError('Unable to load devices.')
+        error: () => this.showError('לא ניתן לטעון מכשירים.')
       });
   }
 
@@ -301,7 +301,7 @@ export class LoansComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (types) => this.depositTypes.set(Array.isArray(types) ? types : []),
-        error: () => this.showError('Unable to load deposit types.')
+        error: () => this.showError('לא ניתן לטעון סוגי פיקדון.')
       });
   }
 
@@ -328,10 +328,10 @@ export class LoansComponent implements OnInit {
   }
 
   private showSuccess(message: string): void {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+    this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: message });
   }
 
   private showError(message: string): void {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+    this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: message });
   }
 }

@@ -116,7 +116,7 @@ export class DevicesComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (devices) => this.devices.set(Array.isArray(devices) ? devices : []),
-        error: () => this.showError('Unable to load devices. Please try again.')
+        error: () => this.showError('לא ניתן לטעון מכשירים. אנא נסה שוב.')
       });
   }
 
@@ -183,19 +183,19 @@ export class DevicesComponent implements OnInit {
           this.dialogVisible.set(false);
           this.resetForm();
           this.loadDevices();
-          this.showSuccess(this.isEditMode() ? 'Device updated successfully' : 'Device created successfully');
+          this.showSuccess(this.isEditMode() ? 'המכשיר עודכן בהצלחה' : 'המכשיר נוצר בהצלחה');
         },
-        error: () => this.showError(this.isEditMode() ? 'Unable to update device. Please try again.' : 'Unable to create device. Please try again.')
+        error: () => this.showError(this.isEditMode() ? 'לא ניתן לעדכן את המכשיר. אנא נסה שוב.' : 'לא ניתן ליצור את המכשיר. אנא נסה שוב.')
       });
   }
 
   deleteDevice(device: Device): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete device ${device.deviceNumber ?? device.deviceId}?`,
-      header: 'Delete Device',
+      message: `האם אתה בטוח שברצונך למחוק את המכשיר ${device.deviceNumber ?? device.deviceId}?`,
+      header: 'מחיקת מכשיר',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: 'מחק',
+      rejectLabel: 'ביטול',
       accept: () => {
         if (device.deviceId === undefined) {
           return;
@@ -208,9 +208,9 @@ export class DevicesComponent implements OnInit {
           .subscribe({
             next: () => {
               this.loadDevices();
-              this.showSuccess('Device deleted successfully');
+              this.showSuccess('המכשיר נמחק בהצלחה');
             },
-            error: () => this.showError('Unable to delete device. Please try again.')
+            error: () => this.showError('לא ניתן למחוק את המכשיר. אנא נסה שוב.')
           });
       }
     });
@@ -231,7 +231,7 @@ export class DevicesComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (branches) => this.branches.set(Array.isArray(branches) ? branches : []),
-        error: () => this.showError('Unable to load branches.')
+        error: () => this.showError('לא ניתן לטעון סניפים.')
       });
   }
 
@@ -241,7 +241,7 @@ export class DevicesComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (types) => this.deviceTypes.set(Array.isArray(types) ? types : []),
-        error: () => this.showError('Unable to load device types.')
+        error: () => this.showError('לא ניתן לטעון סוגי מכשירים.')
       });
   }
 
@@ -253,7 +253,7 @@ export class DevicesComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (device) => this.deviceForm.patchValue(device, { emitEvent: false }),
-        error: () => this.showError('Unable to load device details.')
+        error: () => this.showError('לא ניתן לטעון פרטי המכשיר.')
       });
   }
 
@@ -271,10 +271,10 @@ export class DevicesComponent implements OnInit {
   }
 
   private showSuccess(message: string): void {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+    this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: message });
   }
 
   private showError(message: string): void {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+    this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: message });
   }
 }

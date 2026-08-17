@@ -107,7 +107,7 @@ export class BranchesComponent implements OnInit {
         },
         error: () => {
           this.loading.set(false);
-          this.showError('Unable to load branches. Please try again.');
+          this.showError('לא ניתן לטעון סניפים. אנא נסה שוב.');
         }
       });
   }
@@ -169,11 +169,11 @@ export class BranchesComponent implements OnInit {
         this.dialogVisible.set(false);
         this.resetForm();
         this.loadBranches();
-        this.showSuccess(this.isEditMode() ? 'Branch updated successfully' : 'Branch created successfully');
+        this.showSuccess(this.isEditMode() ? 'הסניף עודכן בהצלחה' : 'הסניף נוצר בהצלחה');
       },
       error: () => {
         this.loading.set(false);
-        this.showError(this.isEditMode() ? 'Unable to update branch. Please try again.' : 'Unable to create branch. Please try again.');
+        this.showError(this.isEditMode() ? 'לא ניתן לעדכן את הסניף. אנא נסה שוב.' : 'לא ניתן ליצור את הסניף. אנא נסה שוב.');
       }
     });
   }
@@ -204,11 +204,11 @@ export class BranchesComponent implements OnInit {
 
   deleteBranch(branch: Branch): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${branch.branchName}?`,
-      header: 'Delete Branch',
+      message: `האם אתה בטוח שברצונך למחוק את ${branch.branchName}?`,
+      header: 'מחיקת סניף',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: 'מחק',
+      rejectLabel: 'ביטול',
       accept: () => {
         if (branch.branchId === undefined) {
           return;
@@ -222,11 +222,11 @@ export class BranchesComponent implements OnInit {
             next: () => {
               this.loading.set(false);
               this.loadBranches();
-              this.showSuccess('Branch deleted successfully');
+              this.showSuccess('הסניף נמחק בהצלחה');
             },
             error: () => {
               this.loading.set(false);
-              this.showError('Unable to delete branch. Please try again.');
+              this.showError('לא ניתן למחוק את הסניף. אנא נסה שוב.');
             }
           });
       }
@@ -255,7 +255,7 @@ export class BranchesComponent implements OnInit {
         },
         error: () => {
           this.loading.set(false);
-          this.showError('Unable to load branch details.');
+          this.showError('לא ניתן לטעון פרטי הסניף.');
         }
       });
   }
@@ -278,7 +278,7 @@ export class BranchesComponent implements OnInit {
   private showSuccess(message: string): void {
     this.messageService.add({
       severity: 'success',
-      summary: 'Success',
+      summary: 'הצלחה',
       detail: message
     });
   }
@@ -286,7 +286,7 @@ export class BranchesComponent implements OnInit {
   private showError(message: string): void {
     this.messageService.add({
       severity: 'error',
-      summary: 'Error',
+      summary: 'שגיאה',
       detail: message
     });
   }

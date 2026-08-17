@@ -97,7 +97,7 @@ export class DeviceCategoriesComponent implements OnInit {
         },
         error: () => {
           this.loading.set(false);
-          this.showError('Unable to load device categories. Please try again.');
+          this.showError('לא ניתן לטעון את קטגוריות המכשירים. אנא נסה שוב.');
         }
       });
   }
@@ -154,22 +154,22 @@ export class DeviceCategoriesComponent implements OnInit {
         this.dialogVisible.set(false);
         this.resetForm();
         this.loadCategories();
-        this.showSuccess(this.isEditMode() ? 'Device category updated successfully' : 'Device category created successfully');
+        this.showSuccess(this.isEditMode() ? 'קטגוריית המכשיר עודכנה בהצלחה' : 'קטגוריית המכשיר נוצרה בהצלחה');
       },
       error: () => {
         this.loading.set(false);
-        this.showError(this.isEditMode() ? 'Unable to update device category. Please try again.' : 'Unable to create device category. Please try again.');
+        this.showError(this.isEditMode() ? 'לא ניתן לעדכן את קטגוריית המכשיר. אנא נסה שוב.' : 'לא ניתן ליצור את קטגוריית המכשיר. אנא נסה שוב.');
       }
     });
   }
 
   deleteCategory(category: DeviceCategory): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${category.categoryName}?`,
-      header: 'Delete Device Category',
+      message: `האם אתה בטוח שברצונך למחוק את ${category.categoryName}?`,
+      header: 'מחיקת קטגוריית מכשיר',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Delete',
-      rejectLabel: 'Cancel',
+      acceptLabel: 'מחק',
+      rejectLabel: 'ביטול',
       accept: () => {
         if (category.categoryId === undefined) {
           return;
@@ -183,11 +183,11 @@ export class DeviceCategoriesComponent implements OnInit {
             next: () => {
               this.loading.set(false);
               this.loadCategories();
-              this.showSuccess('Device category deleted successfully');
+              this.showSuccess('קטגוריית המכשיר נמחקה בהצלחה');
             },
             error: () => {
               this.loading.set(false);
-              this.showError('Unable to delete device category. Please try again.');
+              this.showError('לא ניתן למחוק את קטגוריית המכשיר. אנא נסה שוב.');
             }
           });
       }
@@ -216,7 +216,7 @@ export class DeviceCategoriesComponent implements OnInit {
         },
         error: () => {
           this.loading.set(false);
-          this.showError('Unable to load device category details.');
+          this.showError('לא ניתן לטעון את פרטי קטגוריית המכשיר.');
         }
       });
   }
@@ -234,7 +234,7 @@ export class DeviceCategoriesComponent implements OnInit {
   private showSuccess(message: string): void {
     this.messageService.add({
       severity: 'success',
-      summary: 'Success',
+      summary: 'הצלחה',
       detail: message
     });
   }
@@ -242,7 +242,7 @@ export class DeviceCategoriesComponent implements OnInit {
   private showError(message: string): void {
     this.messageService.add({
       severity: 'error',
-      summary: 'Error',
+      summary: 'שגיאה',
       detail: message
     });
   }
