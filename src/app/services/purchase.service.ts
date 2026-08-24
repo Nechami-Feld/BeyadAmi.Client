@@ -13,6 +13,10 @@ export class PurchaseService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
 
+  getReceiptUrl(receipt: string): string {
+    return new URL(receipt, this.baseUrl).toString();
+  }
+
   getPurchases(): Observable<PurchaseDto[]> {
     return this.http.get<PurchaseDto[]>(`${this.baseUrl}api/purchases`);
   }
@@ -31,6 +35,13 @@ export class PurchaseService {
 
   createPurchase(model: CreatePurchaseDto): Observable<PurchaseDto> {
     return this.http.post<PurchaseDto>(`${this.baseUrl}api/purchases`, model);
+  }
+
+  uploadReceipt(id: number, file: File): Observable<{ receiptUrl: string }> {
+    debugger
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<{ receiptUrl: string }>(`${this.baseUrl}api/purchases/${id}/receipt`, formData);
   }
 
   updatePurchase(id: number, model: UpdatePurchaseDto): Observable<PurchaseDto> {

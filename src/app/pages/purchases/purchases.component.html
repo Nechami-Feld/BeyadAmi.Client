@@ -37,6 +37,7 @@
             <th>סה"כ</th>
             <th>נרכש ע"י</th>
             <th>תאריך רכישה</th>
+            <th>קבלה</th>
             <th>הערות</th>
             <th>פעולות</th>
           </tr>
@@ -53,6 +54,13 @@
               <td>{{ purchase.totalPrice | number:'1.2-2' }}</td>
               <td>{{ purchase.purchasedBy }}</td>
               <td>{{ formatDate(purchase.purchaseDate) }}</td>
+              <td>
+                <a *ngIf="purchase.receipt" [href]="getReceiptUrl(purchase.receipt)" target="_blank" rel="noopener noreferrer">
+                  <i class="pi pi-file"></i>
+                  צפייה במסמך
+                </a>
+                <span *ngIf="!purchase.receipt">-</span>
+              </td>
               <td>{{ purchase.notes }}</td>
               <td>
                 <div class="action-buttons">
@@ -69,7 +77,7 @@
 
           <ng-template #emptyState>
             <tr>
-              <td colspan="11" class="empty-state">לא נמצאו רכישות.</td>
+              <td colspan="12" class="empty-state">לא נמצאו רכישות.</td>
             </tr>
           </ng-template>
         </tbody>
@@ -135,7 +143,8 @@
 
       <div class="field">
         <label for="receipt">קבלה</label>
-        <input pInputText id="receipt" formControlName="receipt" />
+        <input id="receipt" type="file" accept="application/pdf,image/*" (change)="onReceiptFileSelected($event)" />
+        <small *ngIf="selectedReceiptFile() as file">{{ file.name }}</small>
       </div>
 
       <div class="field">

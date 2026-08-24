@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { finalize, of, switchMap } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -61,6 +61,8 @@ export class PurchasesComponent implements OnInit {
   readonly dialogVisible = signal(false);
   readonly isEditMode = signal(false);
   readonly selectedPurchaseId = signal<number | null>(null);
+  readonly selectedReceiptFile = signal<File | null>(null);
+  readonly existingReceiptFile = signal<string | null>(null);
 
   readonly filteredPurchases = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -165,7 +167,7 @@ export class PurchasesComponent implements OnInit {
           quantity: formValue.quantity,
           pricePerUnit: formValue.pricePerUnit,
           purchasedBy: formValue.purchasedBy || null,
-          receipt: formValue.receipt || null,
+          receipt: this.existingReceiptFile(),
           notes: formValue.notes || null,
         } as UpdatePurchaseDto)
       : this.purchaseService.createPurchase({
@@ -180,7 +182,15 @@ export class PurchasesComponent implements OnInit {
         } as CreatePurchaseDto);
 
     saveRequest
-      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.saving.set(false)))
+      .pipe(
+        switchMap((purchase) => {
+          debugger
+          const receiptFile = this.selectedReceiptFile();
+          return receiptFile ? this.purchaseService.uploadReceipt(purchase.purchaseId, receiptFile) : of(purchase);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.saving.set(false))
+      )
       .subscribe({
         next: () => {
           this.dialogVisible.set(false);
@@ -188,7 +198,7 @@ export class PurchasesComponent implements OnInit {
           this.loadPurchases();
           this.showSuccess(this.isEditMode() ? 'הרכישה עודכנה בהצלחה' : 'הרכישה נוצרה בהצלחה');
         },
-        error: () => this.showError(this.isEditMode() ? 'לא ניתן לעדכן רכישה. אנא נסה שוב.' : 'לא ניתן ליצור רכישה. אנא נסה שוב.')
+        error: (err) => this.showError(this.isEditMode() ? 'לא ניתן לעדכן רכישה. אנא נסה שוב.' : 'לא ניתן ליצור רכישה. אנא נסה שוב.')
       });
   }
 
@@ -224,6 +234,15 @@ export class PurchasesComponent implements OnInit {
     return purchase.purchaseId ?? index;
   }
 
+  onReceiptFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedReceiptFile.set(input.files?.[0] ?? null);
+  }
+
+  getReceiptUrl(receipt: string): string {
+    return this.purchaseService.getReceiptUrl(receipt);
+  }
+
   formatDate(dateStr: string): string {
     if (!dateStr) return '';
     return new Date(dateStr).toLocaleDateString('he-IL');
@@ -246,12 +265,15 @@ export class PurchasesComponent implements OnInit {
             receipt: purchase.receipt ?? '',
             notes: purchase.notes ?? '',
           }, { emitEvent: false });
+          this.existingReceiptFile.set(this.getReceiptFileName(purchase.receipt));
         },
         error: () => this.showError('לא ניתן לטעון פרטי רכישה.')
       });
   }
 
   private resetForm(): void {
+    this.selectedReceiptFile.set(null);
+    this.existingReceiptFile.set(null);
     this.purchaseForm.reset({
       storeId: null,
       productId: null,
@@ -264,6 +286,11 @@ export class PurchasesComponent implements OnInit {
     });
     this.purchaseForm.markAsPristine();
     this.purchaseForm.markAsUntouched();
+  }
+
+  private getReceiptFileName(receipt: string | null | undefined): string | null {
+    if (!receipt) return null;
+    return receipt.split('/').pop() ?? null;
   }
 
   private showSuccess(message: string): void {
