@@ -38,7 +38,7 @@
             <th>סניף</th>
             <th>שם משאיל</th>
             <th>טלפון</th>
-            <th>סוג הפקדה</th>
+            <th>סוג פיקדון</th>
             <th>תאריך השאלה</th>
             <th>תאריך החזרה</th>
             <th>הערות </th>
@@ -123,14 +123,14 @@
       </div>
 
       <div class="field">
-        <label for="depositTypeId">סוג הפקדה</label>
+        <label for="depositTypeId">סוג פיקדון</label>
         <select id="depositTypeId" class="field-select" formControlName="depositTypeId">
-          <option [value]="0" disabled>בחר סוג הפקדה</option>
+          <option [value]="0" disabled>בחר סוג פיקדון</option>
           <option *ngFor="let dt of depositTypes()" [value]="dt.depositTypeId">{{ dt.depositTypeName }}</option>
         </select>
         <small class="error"
           *ngIf="hasError(loanForm, 'depositTypeId', 'required') || hasError(loanForm, 'depositTypeId', 'min')">חובה
-          לבחור סוג הפקדה.</small>
+          לבחור סוג פיקדון.</small>
       </div>
 
       <div class="field">
